@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vishwajeet Kumar - 3D Cinematic Artist</title>
+    <meta name="description" content="Professional 3D rendering artist specializing in photorealistic visuals, architectural visualization, and cinematic CG.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Model Viewer -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Scroll Progress Bar -->
+    <div id="scroll-progress"></div>
+    
+    <!-- Three.js Canvas Background -->
+    <canvas id="three-canvas"></canvas>
+    
+    <!-- Noise & Scanlines Overlays -->
+    <div class="noise-overlay"></div>
+    <div class="scanlines"></div>
+    
+    <!-- Cube Loader -->
+    <div id="loader">
+        <div class="cube-loader">
+            <div class="cube-top"></div>
+            <div class="cube-wrapper">
+                <span style="--i:0" class="cube-span"></span>
+                <span style="--i:1" class="cube-span"></span>
+                <span style="--i:2" class="cube-span"></span>
+                <span style="--i:3" class="cube-span"></span>
+            </div>
+        </div>
+        <div class="loader-text">INITIALIZING...</div>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button id="theme-toggle" class="theme-btn" aria-label="Toggle Theme">
+        <svg class="sun-icon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <!-- HERO SECTION -->
+    <header id="hero" class="section-card">
+        <div class="hero-overlay"></div>
+        <span class="bg-glow"></span>
+        
+        <div class="hero-content">
+            <h1 class="gsap-hero-title">VISHWAJEET KUMAR</h1>
+            <p class="hero-role gsap-hero-subtitle">3D Cinematic Artist | 3D Rendering Specialist</p>
+            <p class="hero-tagline gsap-hero-desc">Creating cinematic worlds through lighting, rendering, and storytelling.</p>
+            
+            <div class="hero-buttons gsap-hero-buttons">
+                <a href="#featured-work" class="cinematic-btn">View My Work</a>
+                <a href="Vishuu_Kumar_Resume (1).pdf" download class="cinematic-btn secondary" id="download-resume">Download Resume</a>
+                <a href="#contact" class="cinematic-btn">Contact Me</a>
+            </div>
+        </div>
+        
+        <div class="scroll-indicator">
+            <p>Scroll to explore</p>
+            <div class="scroll-line"></div>
+        </div>
+    </header>
+
+    <!-- FEATURED WORK SECTION -->
+    <section id="featured-work" class="section-card">
+        <span class="bg-glow"></span>
+        <div class="container">
+            <h2 class="section-title"><span class="gradient-border-text">Projects Gallery</span></h2>
+            
+            <div class="work-grid">
+                <div class="work-item" data-project="project1">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471?w=800&q=80" alt="Architectural Visualization" loading="lazy">
+                        <div class="work-overlay">
+                            <h3>Architectural Visualization</h3>
+                            <p><span>Archviz</span> / <span>Blender</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="work-item" data-project="project2">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&q=80" alt="Product Showcase" loading="lazy">
+                        <div class="work-overlay">
+                            <h3>Product Showcase</h3>
+                            <p><span>Product</span> / <span>Maya</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="work-item" data-project="project3">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?w=800&q=80" alt="Cinematic Scene" loading="lazy">
+                        <div class="work-overlay">
+                            <h3>Cinematic Scene</h3>
+                            <p><span>Cinematic</span> / <span>Houdini</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="work-item" data-project="project4">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80" alt="Interior Design" loading="lazy">
+                        <div class="work-overlay">
+                            <h3>Interior Design</h3>
+                            <p><span>Archviz</span> / <span>3ds Max</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="work-item" data-project="project5">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80" alt="Automotive Render" loading="lazy">
+                        <div class="work-overlay">
+                            <h3>Automotive Render</h3>
+                            <p><span>Automotive</span> / <span>V-Ray</span></p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="work-item" data-project="project6">
+                    <div class="work-image">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80" alt="Abstract 3D" loading="lazy">
+                        <div class="work-overlay">
+                            <h3>Abstract 3D</h3>
+                            <p><span>Abstract</span> / <span>Cinema 4D</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOWREEL SECTION -->
+    <section id="showreel" class="section-card">
+        <span class="bg-glow"></span>
+        <div class="container">
+            <h2 class="section-title"><span class="gradient-border-text">Cinematic Showreel</span></h2>
+            <p class="showreel-subtitle">A collection of cinematic environments, lighting studies, and high-quality 3D renders.</p>
+            
+            <div class="showreel-wrapper">
+                <div class="video-container">
+                    <video class="cinematic-video" controls playsinline poster="https://images.unsplash.com/photo-1614728853911-0441cf48d42b?auto=format&fit=crop&w=1920&q=80">
+                        <source src="https://cdn.pixabay.com/video/2023/09/24/182090-867966883_large.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+            
+            <p class="showreel-desc">A compilation of my best work in environment design, lighting, and cinematic rendering. Featuring projects created with Unreal Engine 5, Maya, and Houdini.</p>
+            
+            <div class="showreel-actions">
+                <a href="#featured-work" class="cinematic-btn">View Projects</a>
+                <a href="#contact" class="cinematic-btn secondary">Contact Me</a>
+                <a href="https://cdn.pixabay.com/video/2023/09/24/182090-867966883_large.mp4" download class="cinematic-btn">
+                    <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE 3D SECTION -->
+    <section id="interactive-3d" class="section-card">
+        <span class="bg-glow"></span>
+        <div class="container">
+            <h2 class="section-title"><span class="gradient-border-text">Interactive 3D</span></h2>
+            <div class="viewer-container">
+                <model-viewer 
+                    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
+                    poster="https://modelviewer.dev/shared-assets/models/Astronaut.png" 
+                    alt="A 3D model of an astronaut"
+                    shadow-intensity="1"
+                    camera-controls
+                    auto-rotate
+                    ar>
+                </model-viewer>
+                <div class="viewer-controls">
+                    <p>Drag to rotate • Scroll to zoom</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKFLOW SECTION -->
+    <section id="workflow" class="section-card">
+        <div class="container">
+            <h2 class="section-title"><span class="gradient-border-text">My Workflow</span></h2>
+            <div class="workflow-steps">
+                <div class="workflow-step">Concept</div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">Modeling</div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">Texturing</div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">Lighting</div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">Rendering</div>
+                <div class="workflow-arrow">→</div>
+                <div class="workflow-step">Final Shot</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="section-card">
+        <span class="bg-glow"></span>
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2><span class="gradient-border-text">About</span></h2>
+                    
+                    <div class="ui-block">
+                        <p>I'm Vishwajeet Kumar, a 3D Cinematic Artist specializing in photorealistic rendering, environment design, and product visualization. Currently pursuing my Bachelor's in Animation at Asian Academy of Media and Arts.</p>
+                    </div>
+                    
+                    <div class="ui-block">
+                        <h3 style="color: var(--accent-blue); margin-bottom: 1rem;">Education</h3>
+                        <div style="margin-bottom: 1.5rem;">
+                            <h4 style="color: var(--text-primary);">Bachelor's in Animation</h4>
+                            <p style="color: var(--text-secondary);">Asian Academy of Media and Arts | 2024–2026</p>
+                        </div>
+                        <div style="margin-bottom: 1rem;">
+                            <h4 style="color: var(--text-primary);">Intermediate</h4>
+                            <p style="color: var(--text-secondary);">Kendriya Vidyalaya AFS Purnea | 2021–2022</p>
+                        </div>
+                    </div>
+                    
+                    <div class="ui-block">
+                        <h3 style="color: var(--accent-blue); margin-bottom: 1rem;">Expertise</h3>
+                        <ul style="list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> Cinematic Rendering</li>
+                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> Environment Design</li>
+                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> Lighting & Composition</li>
+                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> Product Visualization</li>
+                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> 3D Modeling & Texturing</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt="Vishwajeet Kumar" loading="lazy" onerror="this.src='https://via.placeholder.com/400x600?text=Image+Not+Available'">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS SECTION WITH CIRCULAR METERS -->
+    <section id="skills" class="section-card">
+        <div class="container">
+            <h2 class="section-title"><span class="gradient-border-text">Skills</span></h2>
+            
+            <!-- Circular Skill Meters -->
+            <div class="circular-skills">
+                <div class="skill-meter" data-percent="95">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42"/>
+                        <circle class="progress" cx="50" cy="50" r="42"/>
+                    </svg>
+                    <div class="skill-meter-label">
+                        <span>Maya</span>
+                        <small>95%</small>
+                    </div>
+                </div>
+                
+                <div class="skill-meter" data-percent="90">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42"/>
+                        <circle class="progress purple" cx="50" cy="50" r="42"/>
+                    </svg>
+                    <div class="skill-meter-label">
+                        <span>Blender</span>
+                        <small>90%</small>
+                    </div>
+                </div>
+                
+                <div class="skill-meter" data-percent="88">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42"/>
+                        <circle class="progress" cx="50" cy="50" r="42"/>
+                    </svg>
+                    <div class="skill-meter-label">
+                        <span>3ds Max</span>
+                        <small>88%</small>
+                    </div>
+                </div>
+                
+                <div class="skill-meter" data-percent="85">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42"/>
+                        <circle class="progress purple" cx="50" cy="50" r="42"/>
+                    </svg>
+                    <div class="skill-meter-label">
+                        <span>ZBrush</span>
+                        <small>85%</small>
+                    </div>
+                </div>
+                
+                <div class="skill-meter" data-percent="92">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42"/>
+                        <circle class="progress" cx="50" cy="50" r="42"/>
+                    </svg>
+                    <div class="skill-meter-label">
+                        <span>Substance</span>
+                        <small>92%</small>
+                    </div>
+                </div>
+                
+                <div class="skill-meter" data-percent="90">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42"/>
+                        <circle class="progress purple" cx="50" cy="50" r="42"/>
+                    </svg>
+                    <div class="skill-meter-label">
+                        <span>V-Ray</span>
+                        <small>90%</small>
+                    </div>
+                </div>
+                
+                <div class="skill-meter" data-percent="82">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42"/>
+                        <circle class="progress" cx="50" cy="50" r="42"/>
+                    </svg>
+                    <div class="skill-meter-label">
+                        <span>Arnold</span>
+                        <small>82%</small>
+                    </div>
+                </div>
+                
+                <div class="skill-meter" data-percent="85">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="bg" cx="50" cy="50" r="42"/>
+                        <circle class="progress purple" cx="50" cy="50" r="42"/>
+                    </svg>
+                    <div class="skill-meter-label">
+                        <span>Photoshop</span>
+                        <small>85%</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Skill Cards Grid -->
+            <div class="skills-grid" style="margin-top: 4rem;">
+                <div class="skill-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                    <h4>3D Modeling</h4>
+                </div>
+                
+                <div class="skill-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="9" x2="21" y2="9"></line>
+                        <line x1="9" y1="21" x2="9" y2="9"></line>
+                    </svg>
+                    <h4>Texturing</h4>
+                </div>
+                
+                <div class="skill-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0L12 2.69z"></path>
+                        <line x1="12" y1="12" x2="12" y2="18"></line>
+                        <line x1="12" y1="2" x2="12" y2="6"></line>
+                    </svg>
+                    <h4>Lighting</h4>
+                </div>
+                
+                <div class="skill-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 7l2.15 2.15a1 1 0 0 0 .71.29h14.28a1 1 0 0 0 .71-.29L22 7"></path>
+                        <path d="M2 17l2.15-2.15a1 1 0 0 1 .71-.29h14.28a1 1 0 0 1 .71.29L22 17"></path>
+                        <path d="M12 12v10"></path>
+                        <path d="M12 2v1"></path>
+                    </svg>
+                    <h4>Rendering</h4>
+                </div>
+                
+                <div class="skill-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        <path d="M14 21L12 19l-2 2"></path>
+                        <path d="M18 17l-2-2-2 2"></path>
+                    </svg>
+                    <h4>Environment</h4>
+                </div>
+                
+                <div class="skill-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                    <h4>Compositing</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOFTWARE PROFICIENCY -->
+    <section id="software" class="section-card">
+        <div class="container">
+            <h2 class="section-title"><span class="gradient-border-text">Software Proficiency</span></h2>
+            
+            <h3 style="color: var(--accent-blue); margin-bottom: 1.5rem; text-align: center;">3D Software</h3>
+            <div class="skills-grid">
+                <div class="skill-card"><h4>Maya</h4></div>
+                <div class="skill-card"><h4>Blender</h4></div>
+                <div class="skill-card"><h4>3ds Max</h4></div>
+                <div class="skill-card"><h4>ZBrush</h4></div>
+                <div class="skill-card"><h4>SketchUp</h4></div>
+            </div>
+            
+            <h3 style="color: var(--accent-blue); margin: 2rem 0 1.5rem; text-align: center;">Rendering Engines</h3>
+            <div class="skills-grid">
+                <div class="skill-card"><h4>V-Ray</h4></div>
+                <div class="skill-card"><h4>Arnold</h4></div>
+                <div class="skill-card"><h4>Corona</h4></div>
+                <div class="skill-card"><h4>Cycles</h4></div>
+                <div class="skill-card"><h4>D5 Render</h4></div>
+            </div>
+            
+            <h3 style="color: var(--accent-blue); margin: 2rem 0 1.5rem; text-align: center;">Texturing & Design</h3>
+            <div class="skills-grid">
+                <div class="skill-card"><h4>Substance Painter</h4></div>
+                <div class="skill-card"><h4>Photoshop</h4></div>
+            </div>
+            
+            <h3 style="color: var(--accent-blue); margin: 2rem 0 1.5rem; text-align: center;">Motion & Video</h3>
+            <div class="skills-grid">
+                <div class="skill-card"><h4>Premiere Pro</h4></div>
+                <div class="skill-card"><h4>After Effects</h4></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION -->
+    <section id="experience" class="section-card">
+        <span class="bg-glow"></span>
+        <div class="container">
+            <h2 class="section-title"><span class="gradient-border-text">Education</span></h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="date">2024 - 2026</span>
+                        <h3>Bachelor's in Animation</h3>
+                        <h4>Asian Academy of Media and Arts</h4>
+                        <p>Currently pursuing degree in Animation with focus on 3D rendering, environment design, and cinematic visualization.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <span class="date">2021 - 2022</span>
+                        <h3>Intermediate</h3>
+                        <h4>Kendriya Vidyalaya AFS Purnea</h4>
+                        <p>Completed intermediate education with focus on science and arts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clients-section">
+                <h3>Select Clients</h3>
+                <div class="clients-grid">
+                    <div class="client-item">TechFlow</div>
+                    <div class="client-item">BuildWell</div>
+                    <div class="client-item">LuxeInteriors</div>
+                    <div class="client-item">MotionArts</div>
+                </div>
+            </div>
+
+            <!-- References -->
+            <div class="ui-block" style="margin-top: 3rem;">
+                <h3>References</h3>
+                <div class="references-grid" style="margin-top: 30px;">
+                    <div class="reference-card">
+                        <p class="ref-text">"Vishwajeet's attention to lighting and detail transformed our project. His ability to capture the mood we wanted was exceptional."</p>
+                        <div class="ref-info">
+                            <h4>Sarah Jenkins</h4>
+                            <p>Art Director, Creative Studio X</p>
+                        </div>
+                    </div>
+                    
+                    <div class="reference-card">
+                        <p class="ref-text">"A true professional who delivers cinematic quality under tight deadlines. Highly recommended for any high-stakes visualization work."</p>
+                        <div class="ref-info">
+                            <h4>David Chen</h4>
+                            <p>Senior Architect, BuildWell</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="section-card">
+        <span class="bg-glow"></span>
+        <div class="container">
+            <h2 class="section-title"><span class="gradient-border-text">Contact</span></h2>
+            
+            <div class="contact-content">
+                <div class="contact-info">
+                    <p class="contact-description">Ready to bring your vision to life? Let's create something extraordinary together.</p>
+                    <a href="mailto:vishwajeetkumar2019@gmail.com" class="contact-email">vishwajeetkumar2019@gmail.com</a>
+                    
+                    <p class="contact-phone" style="margin-top: 10px; color: var(--text-secondary);">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 8px;">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                        </svg>
+                        +91-9608975704
+                    </p>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link">ArtStation</a>
+                        <a href="#" class="social-link">LinkedIn</a>
+                        <a href="#" class="social-link">Sketchfab</a>
+                    </div>
+                    
+                    <div style="margin-top: 40px;">
+                        <a href="Vishuu_Kumar_Resume (1).pdf" download class="cinematic-btn" style="min-width: 180px; text-align: center;">Download Resume</a>
+                    </div>
+                </div>
+                
+                <form class="contact-form" action="mailto:vishwajeetkumar2019@gmail.com" method="post" enctype="text/plain">
+                    <input type="text" name="name" placeholder="Name" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <textarea name="message" placeholder="Message" required></textarea>
+                    <button type="submit" class="cinematic-btn" style="width: 100%;">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <p>&copy; 2024 Vishwajeet Kumar</p>
+                    <p>All rights reserved</p>
+                </div>
+                <div>
+                    <p>Mumbai, India</p>
+                    <p>vishwajeetkumar2019@gmail.com</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#">ArtStation</a>
+                    <a href="#">LinkedIn</a>
+                    <a href="#">Instagram</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="back-to-top" aria-label="Back to Top">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+        </svg>
+    </button>
+
+    <!-- PROJECT MODAL -->
+    <div class="portfolio-modal" id="project-modal">
+        <div class="modal-inner">
+            <button class="close-modal-btn" id="close-modal">×</button>
+            <div class="modal-tabs">
+                <button data-type="beauty" class="active">Final</button>
+                <button data-type="wire">Wire</button>
+                <button data-type="clay">Clay</button>
+            </div>
+            <img class="modal-image" id="modal-image" src="" alt="Project Detail">
+            <div class="modal-content">
+                <h2 id="modal-title">Project Title</h2>
+                <p id="modal-desc">Project description goes here...</p>
+                <div class="modal-gallery">
+                    <img src="https://images.unsplash.com/photo-1501183638710-841dd1904471?w=400&q=80" alt="Gallery 1">
+                    <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80" alt="Gallery 2">
+                    <img src="https://images.unsplash.com/photo-1535223289827-42f1e9919769?w=400&q=80" alt="Gallery 3">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dock Navigation -->
+    <div class="dock-container">
+        <nav class="dock">
+            <a href="#hero" class="dock-item" data-label="Home">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </a>
+            <a href="#featured-work" class="dock-item" data-label="Work">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+            </a>
+            <a href="#showreel" class="dock-item" data-label="Reel">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+            </a>
+            <a href="#about" class="dock-item" data-label="About">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+            </a>
+            <a href="#skills" class="dock-item" data-label="Skills">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+            </a>
+            <a href="#contact" class="dock-item" data-label="Contact">
+                <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+            </a>
+        </nav>
+    </div>
+
+    <!-- GSAP & Custom Scripts -->
+    <script src="script 2.0.js"></script>
+    <script>
+        // ==========================================
+        // THREE.JS BACKGROUND ANIMATION
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('three-canvas');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+            
+            // Particle system
+            const particles = [];
+            const particleCount = window.innerWidth < 768 ? 50 : 120;
+            
+            class Particle {
+                constructor() {
+                    this.reset();
+                }
+                
+                reset() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.size = Math.random() * 2 + 0.5;
+                    this.speedX = (Math.random() - 0.5) * 0.5;
+                    this.speedY = (Math.random() - 0.5) * 0.5;
+                    this.opacity = Math.random() * 0.5 + 0.2;
+                    this.color = Math.random() > 0.5 ? '#00d4ff' : '#bf00ff';
+                }
+                
+                update() {
+                    this.x += this.speedX;
+                    this.y += this.speedY;
+                    
+                    if (this.x < 0 || this.x > width) this.speedX *= -1;
+                    if (this.y < 0 || this.y > height) this.speedY *= -1;
+                    
+                    // Mouse interaction
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 150) {
+                        this.x -= dx * 0.02;
+                        this.y -= dy * 0.02;
+                    }
+                }
+                
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.globalAlpha = this.opacity;
+                    ctx.fill();
+                    ctx.globalAlpha = 1;
+                }
+            }
+            
+            // Initialize particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+            
+            // Mouse tracking
+            let mouse = { x: null, y: null };
+            window.addEventListener('mousemove', (e) => {
+                mouse.x = e.clientX;
+                mouse.y = e.clientY;
+            });
+            
+            // Animation loop
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                
+                // Draw connections
+                particles.forEach((p1, i) => {
+                    particles.slice(i + 1).forEach(p2 => {
+                        const dx = p1.x - p2.x;
+                        const dy = p1.y - p2.y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        
+                        if (dist < 150) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = p1.color;
+                            ctx.globalAlpha = 0.15 * (1 - dist / 150);
+                            ctx.lineWidth = 0.5;
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                            ctx.globalAlpha = 1;
+                        }
+                    });
+                });
+                
+                particles.forEach(p => {
+                    p.update();
+                    p.draw();
+                });
+                
+                requestAnimationFrame(animate);
+            }
+            
+            animate();
+            
+            // Pause when tab is hidden
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    cancelAnimationFrame(animate);
+                } else {
+                    animate();
+                }
+            });
+        });
+
+        // ==========================================
+        // GSAP ANIMATIONS
+        // ==========================================
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Hero animations on load
+        window.addEventListener('load', () => {
+            const tl = gsap.timeline();
+            
+            tl.from('.cube-loader', {
+                duration: 1,
+                scale: 0.5,
+                opacity: 0,
+                ease: 'back.out(1.7)'
+            })
+            .from('.loader-text', {
+                duration: 0.5,
+                opacity: 0,
+                y: 20
+            }, '-=0.5')
+            .to({}, {
+                duration: 1.5,
+                onComplete: () => {
+                    document.getElementById('loader').classList.add('hidden');
+                }
+            })
+            .from('.gsap-hero-title', {
+                duration: 1,
+                y: 100,
+                opacity: 0,
+                ease: 'power4.out'
+            }, '-=0.5')
+            .from('.gsap-hero-subtitle', {
+                duration: 0.8,
+                y: 50,
+                opacity: 0,
+                ease: 'power3.out'
+            }, '-=0.6')
+            .from('.gsap-hero-desc', {
+                duration: 0.8,
+                y: 30,
+                opacity: 0,
+                ease: 'power3.out'
+            }, '-=0.5')
+            .from('.gsap-hero-buttons', {
+                duration: 0.8,
+                y: 30,
+                opacity: 0,
+                ease: 'power3.out'
+            }, '-=0.4')
+            .from('.scroll-indicator', {
+                duration: 0.8,
+                y: 20,
+                opacity: 0,
+                ease: 'power2.out'
+            }, '-=0.3');
+        });
+        
+        // Section reveal animations
+        gsap.utils.toArray('.section-card').forEach(section => {
+            gsap.from(section, {
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 80%',
+                    toggleActions: 'play none none reverse'
+                },
+                y: 60,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out'
+            });
+        });
+        
+        // Skill meter animation
+        gsap.utils.toArray('.skill-meter').forEach(meter => {
+            const percent = meter.dataset.percent;
+            const circle = meter.querySelector('.progress');
+            
+            gsap.from(circle, {
+                scrollTrigger: {
+                    trigger: meter,
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse'
+                },
+                strokeDashoffset: 314,
+                duration: 1.5,
+                ease: 'power2.out',
+                onComplete: () => {
+                    gsap.to(circle, {
+                        strokeDashoffset: 314 - (314 * percent / 100),
+                        duration: 1,
+                        ease: 'power2.out'
+                    });
+                }
+            });
+        });
+        
+        // Timeline animation
+        gsap.utils.toArray('.timeline-item').forEach((item, i) => {
+            gsap.from(item, {
+                scrollTrigger: {
+                    trigger: item,
+                    start: 'top 85%',
+                    toggleActions: 'play none none reverse'
+                },
+                x: i % 2 === 0 ? -50 : 50,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+            });
+        });
+
+        // ==========================================
+        // SCROLL PROGRESS
+        // ==========================================
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (scrollTop / scrollHeight) * 100;
+            document.getElementById('scroll-progress').style.width = scrolled + '%';
+        });
+
+        // ==========================================
+        // THEME TOGGLE
+        // ==========================================
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        if (themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                const isLight = body.getAttribute('data-theme') === 'light';
+                if (isLight) {
+                    body.removeAttribute('data-theme');
+                } else {
+                    body.setAttribute('data-theme', 'light');
+                }
+            });
+        }
+
+        // ==========================================
+        // BACK TO TOP
+        // ==========================================
+        const backToTopBtn = document.getElementById('back-to-top');
+        if (backToTopBtn) {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.add('visible');
+                } else {
+                    backToTopBtn.classList.remove('visible');
+                }
+            });
+
+            backToTopBtn.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // ==========================================
+        // PROJECT MODAL
+        // ==========================================
+        const projectItems = document.querySelectorAll('.work-item');
+        const modal = document.getElementById('project-modal');
+        const closeModal = document.getElementById('close-modal');
+        const modalImage = document.getElementById('modal-image');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+
+        const projectData = {
+            project1: {
+                title: 'Architectural Visualization',
+                desc: 'Photorealistic render of a modern residential complex. This project showcases advanced lighting techniques and material realism in architectural visualization. Created using Blender with custom HDRI lighting setup.',
+                image: 'https://images.unsplash.com/photo-1501183638710-841dd1904471?w=800&q=80'
+            },
+            project2: {
+                title: 'Product Showcase',
+                desc: 'High-end product render for a luxury brand. Focus on material accuracy and studio lighting setup to highlight product details.',
+                image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800&q=80'
+            },
+            project3: {
+                title: 'Cinematic Scene',
+                desc: 'Atmospheric 3D environment created with Houdini. Features complex particle systems and procedural texturing.',
+                image: 'https://images.unsplash.com/photo-1535223289827-42f1e9919769?w=800&q=80'
+            },
+            project4: {
+                title: 'Interior Design',
+                desc: 'Luxury interior visualization with emphasis on natural lighting and realistic material rendering.',
+                image: 'https://images.unsplash.com/photo-1505691938895-1758d7feb511?w=800&q=80'
+            },
+            project5: {
+                title: 'Automotive Render',
+                desc: 'Studio-quality automotive visualization with precise reflections and custom lighting setup using V-Ray.',
+                image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80'
+            },
+            project6: {
+                title: 'Abstract 3D',
+                desc: 'Creative abstract piece exploring form and color using Cinema 4D and Octane Render.',
+                image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80'
+            }
+        };
+
+        projectItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const projectId = item.dataset.project;
+                const data = projectData[projectId];
+                
+                if (data) {
+                    modalImage.src = data.image;
+                    modalTitle.textContent = data.title;
+                    modalDesc.textContent = data.desc;
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // ==========================================
+        // MAGNETIC BUTTONS
+        // ==========================================
+        const magneticElements = document.querySelectorAll('.dock-item, .social-link, .cinematic-btn, .work-item');
+        
+        magneticElements.forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                el.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+            });
+
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        // ==========================================
+        // DOCK BOUNCE EFFECT
+        // ==========================================
+        const dockItems = document.querySelectorAll('.dock-item');
+        dockItems.forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.remove('dock-bounce');
+                void item.offsetWidth;
+                item.classList.add('dock-bounce');
+            });
+        });
+
+        // ==========================================
+        // SMOOTH SCROLL
+        // ==========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
