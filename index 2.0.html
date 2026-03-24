@@ -89,6 +89,37 @@
         </div> -->
     </header>
 
+    <!-- ABOUT SECTION -->
+    <section id="about-hero" class="section-card">
+        <span class="bg-glow"></span>
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2><span class="gradient-border-text">About Me</span></h2>
+                    <p class="about-description">I'm a passionate 3D Cinematic Artist with expertise in creating immersive visual experiences. With years of experience in 3D rendering, lighting, and storytelling, I transform concepts into breathtaking cinematic realities.</p>
+                    <p class="about-description">My work spans architectural visualization, product renders, and cinematic animations. I combine technical precision with artistic vision to deliver outstanding results for clients worldwide.</p>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">5+</span>
+                            <span class="stat-label">Years Experience</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">100+</span>
+                            <span class="stat-label">Projects Completed</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Happy Clients</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="./profilepic.png" alt="Vishwajeet Kumar" loading="lazy" onerror="this.src='https://via.placeholder.com/400x600?text=Image+Not+Available'">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- FEATURED WORK SECTION -->
     <section id="featured-work" class="section-card">
         <span class="bg-glow"></span>
@@ -168,8 +199,8 @@
             
             <div class="showreel-wrapper">
                 <div class="video-container">
-                    <video class="cinematic-video" controls playsinline poster="https://images.unsplash.com/photo-1614728853911-0441cf48d42b?auto=format&fit=crop&w=1920&q=80">
-                        <source src="https://cdn.pixabay.com/video/2023/09/24/182090-867966883_large.mp4" type="video/mp4">
+                    <video class="cinematic-video" autoplay loop muted playsinline poster="https://images.unsplash.com/photo-1614728853911-0441cf48d42b?auto=format&fit=crop&w=1920&q=80">
+                        <source src="./3D SHOWREEL.mp4" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                 </div>
@@ -180,7 +211,7 @@
             <div class="showreel-actions">
                 <a href="#featured-work" class="cinematic-btn">View Projects</a>
                 <a href="#contact" class="cinematic-btn secondary">Contact Me</a>
-                <a href="https://cdn.pixabay.com/video/2023/09/24/182090-867966883_large.mp4" download class="cinematic-btn">
+                <a href="./3D SHOWREEL.mp4" download class="cinematic-btn">
                     <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                         <polyline points="7 10 12 15 17 10"></polyline>
@@ -193,26 +224,104 @@
     </section>
 
     <!-- INTERACTIVE 3D SECTION -->
-    <section id="interactive-3d" class="section-card">
+    <section id="interactive-3d" class="section-card interactive-3d-section">
         <span class="bg-glow"></span>
         <div class="container">
             <h2 class="section-title"><span class="gradient-border-text">Interactive 3D</span></h2>
-            <div class="viewer-container">
-                <model-viewer 
-                    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" 
-                    poster="https://modelviewer.dev/shared-assets/models/Astronaut.png" 
-                    alt="A 3D model of an astronaut"
-                    shadow-intensity="1"
-                    camera-controls
-                    auto-rotate
-                    ar>
-                </model-viewer>
-                <div class="viewer-controls">
-                    <p>Drag to rotate • Scroll to zoom</p>
+            
+            <div class="viewer-wrapper">
+                <!-- 3D Viewer Canvas -->
+                <div id="three-canvas-container" class="canvas-container">
+                    <canvas id="three-canvas"></canvas>
+                </div>
+                
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <h4>Render Modes</h4>
+                    <div class="control-buttons">
+                        <button class="control-btn active" id="btn-textured" data-mode="textured">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                            Textured
+                        </button>
+                        <button class="control-btn" id="btn-clay" data-mode="clay">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+                            Clay
+                        </button>
+                        <button class="control-btn" id="btn-wireframe" data-mode="wireframe">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="none" stroke="currentColor" stroke-width="2" d="M3 3l18 18M3 21l18-18M21 3L3 21"/></svg>
+                            Wireframe
+                        </button>
+                    </div>
+                    
+                    <h4>Controls</h4>
+                    <div class="control-toggles">
+                        <label class="toggle-label">
+                            <span>Auto Rotate</span>
+                            <input type="checkbox" id="toggle-autorotate" checked>
+                            <span class="toggle-switch"></span>
+                        </label>
+                    </div>
+                    
+                    <h4>Lighting</h4>
+                    <div class="slider-control">
+                        <label>Intensity</label>
+                        <input type="range" id="lighting-intensity" min="0" max="200" value="100">
+                    </div>
+                    
+                    <div class="viewer-actions">
+                        <button class="action-btn" id="btn-reset">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                            Reset Camera
+                        </button>
+                        <button class="action-btn" id="btn-fullscreen">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+                            Fullscreen
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Portfolio Details Panel -->
+                <div class="details-panel">
+                    <div class="details-header">
+                        <h3>Project Details</h3>
+                    </div>
+                    <div class="details-content">
+                        <div class="detail-item">
+                            <span class="detail-label">Project</span>
+                            <span class="detail-value">3D Bed Model</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Software</span>
+                            <span class="detail-value">3ds Max + V-Ray</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Renderer</span>
+                            <span class="detail-value">V-Ray Next</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Polygons</span>
+                            <span class="detail-value">45K</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Textures</span>
+                            <span class="detail-value">4K PBR</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Loading Overlay -->
+                <div class="loading-overlay" id="loading-overlay">
+                    <div class="loader">
+                        <div class="loader-ring"></div>
+                        <span>Loading 3D Model...</span>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
     <!-- WORKFLOW SECTION -->
     <section id="workflow" class="section-card">
@@ -230,49 +339,6 @@
                 <div class="workflow-step">Rendering</div>
                 <div class="workflow-arrow">→</div>
                 <div class="workflow-step">Final Shot</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- ABOUT SECTION -->
-    <section id="about" class="section-card">
-        <span class="bg-glow"></span>
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2><span class="gradient-border-text">About</span></h2>
-                    
-                    <div class="ui-block">
-                        <p>I'm Vishwajeet Kumar, a 3D Cinematic Artist specializing in photorealistic rendering, environment design, and product visualization. Currently pursuing my Bachelor's in Animation at Asian Academy of Media and Arts.</p>
-                    </div>
-                    
-                    <div class="ui-block">
-                        <h3 style="color: var(--accent-blue); margin-bottom: 1rem;">Education</h3>
-                        <div style="margin-bottom: 1.5rem;">
-                            <h4 style="color: var(--text-primary);">Bachelor's in Animation</h4>
-                            <p style="color: var(--text-secondary);">Asian Academy of Media and Arts | 2024–2026</p>
-                        </div>
-                        <div style="margin-bottom: 1rem;">
-                            <h4 style="color: var(--text-primary);">Intermediate</h4>
-                            <p style="color: var(--text-secondary);">Kendriya Vidyalaya AFS Purnea | 2021–2022</p>
-                        </div>
-                    </div>
-                    
-                    <div class="ui-block">
-                        <h3 style="color: var(--accent-blue); margin-bottom: 1rem;">Expertise</h3>
-                        <ul style="list-style: none; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> Cinematic Rendering</li>
-                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> Environment Design</li>
-                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> Lighting & Composition</li>
-                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> Product Visualization</li>
-                            <li style="color: var(--text-secondary);"><span style="color: var(--accent-blue);">▹</span> 3D Modeling & Texturing</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="about-image">
-                    <img src="./profile.jpeg" alt="Vishwajeet Kumar" loading="lazy" onerror="this.src='https://via.placeholder.com/400x600?text=Image+Not+Available'">
-                </div>
             </div>
         </div>
     </section>
@@ -1057,6 +1123,309 @@
                         block: 'start'
                     });
                 }
+            });
+        });
+    </script>
+    
+    <!-- Three.js Interactive 3D Viewer Script -->
+    <script>
+        // Initialize Three.js Interactive Viewer
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('three-canvas-container');
+            const canvas = document.getElementById('three-canvas');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            
+            if (!container || !canvas) {
+                console.error('Canvas container not found');
+                return;
+            }
+            
+            // Scene
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0a0a0f);
+            
+            // Camera
+            const camera = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+            camera.position.set(0, 1.5, 4);
+            
+            // Renderer - Optimized for performance
+            const renderer = new THREE.WebGLRenderer({ 
+                canvas: canvas, 
+                antialias: true,
+                powerPreference: 'high-performance'
+            });
+            renderer.setSize(container.offsetWidth, container.offsetHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.BasicShadowMap; // Faster than PCFSoft
+            
+            // Simple Orbit Controls
+            let isDragging = false;
+            let previousMousePosition = { x: 0, y: 0 };
+            let spherical = { theta: 0, phi: Math.PI / 3, radius: 4 };
+            let targetPosition = new THREE.Vector3(0, 0.5, 0);
+            let autoRotate = true;
+            let targetSpherical = { ...spherical };
+            
+            // Mouse controls
+            canvas.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                autoRotate = false;
+                document.getElementById('toggle-autorotate').checked = false;
+            });
+            
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - previousMousePosition.x;
+                const deltaY = e.clientY - previousMousePosition.y;
+                targetSpherical.theta -= deltaX * 0.01;
+                targetSpherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, targetSpherical.phi + deltaY * 0.01));
+            });
+            
+            canvas.addEventListener('mouseup', () => isDragging = false);
+            canvas.addEventListener('mouseleave', () => isDragging = false);
+            
+            canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                targetSpherical.radius = Math.max(2, Math.min(8, targetSpherical.radius + e.deltaY * 0.005));
+            });
+            
+            // Lighting - Simplified but effective
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const mainLight = new THREE.DirectionalLight(0xffffff, 1);
+            mainLight.position.set(5, 5, 5);
+            mainLight.castShadow = true;
+            scene.add(mainLight);
+            
+            const fillLight = new THREE.DirectionalLight(0x6366f1, 0.4);
+            fillLight.position.set(-5, 3, -5);
+            scene.add(fillLight);
+            
+            const rimLight = new THREE.DirectionalLight(0x8b5cf6, 0.3);
+            rimLight.position.set(0, 5, -5);
+            scene.add(rimLight);
+            
+            // Ground
+            const groundGeo = new THREE.PlaneGeometry(10, 10);
+            const groundMat = new THREE.MeshStandardMaterial({ 
+                color: 0x111118, 
+                metalness: 0.8, 
+                roughness: 0.5 
+            });
+            const ground = new THREE.Mesh(groundGeo, groundMat);
+            ground.rotation.x = -Math.PI / 2;
+            ground.position.y = -0.5;
+            ground.receiveShadow = true;
+            scene.add(ground);
+            
+            // Platform
+            const platformGeo = new THREE.CylinderGeometry(1.2, 1.2, 0.08, 32);
+            const platformMat = new THREE.MeshStandardMaterial({ 
+                color: 0x222233, 
+                metalness: 0.9, 
+                roughness: 0.2 
+            });
+            const platform = new THREE.Mesh(platformGeo, platformMat);
+            platform.position.y = -0.46;
+            scene.add(platform);
+            
+            // Platform ring
+            const ringGeo = new THREE.TorusGeometry(1.2, 0.015, 16, 64);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0x6366f1 });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = Math.PI / 2;
+            ring.position.y = -0.42;
+            scene.add(ring);
+            
+            // Create placeholder model (will be replaced by GLB if loaded)
+            let model = null;
+            let modelGroup = new THREE.Group();
+            scene.add(modelGroup);
+            
+            // Simple box as placeholder
+            function createPlaceholder() {
+                const geo = new THREE.BoxGeometry(1.2, 0.6, 1.8);
+                const mat = new THREE.MeshStandardMaterial({ 
+                    color: 0x6366f1, 
+                    metalness: 0.3, 
+                    roughness: 0.6 
+                });
+                model = new THREE.Mesh(geo, mat);
+                model.position.y = 0;
+                model.castShadow = true;
+                modelGroup.add(model);
+            }
+            
+            createPlaceholder();
+            
+            // Try to load GLB model
+            try {
+                const loader = new THREE.GLTFLoader();
+                loader.load(
+                    '3d-bed.glb',
+                    function(gltf) {
+                        modelGroup.clear();
+                        model = gltf.scene;
+                        
+                        // Scale and center
+                        const box = new THREE.Box3().setFromObject(model);
+                        const size = box.getSize(new THREE.Vector3());
+                        const maxDim = Math.max(size.x, size.y, size.z);
+                        const scale = 1.5 / maxDim;
+                        model.scale.setScalar(scale);
+                        
+                        model.position.y = -box.min.y * scale + 0.1;
+                        
+                        model.traverse((child) => {
+                            if (child.isMesh) {
+                                child.castShadow = true;
+                                child.receiveShadow = true;
+                            }
+                        });
+                        
+                        modelGroup.add(model);
+                        loadingOverlay.classList.add('hidden');
+                    },
+                    undefined,
+                    function() {
+                        console.log('Using placeholder model');
+                        loadingOverlay.classList.add('hidden');
+                    }
+                );
+            } catch(e) {
+                console.log('GLTFLoader not available, using placeholder');
+                loadingOverlay.classList.add('hidden');
+            }
+            
+            // Animation
+            let time = 0;
+            function animate() {
+                requestAnimationFrame(animate);
+                time += 0.016;
+                
+                // Smooth camera movement
+                if (autoRotate) {
+                    targetSpherical.theta += 0.003;
+                }
+                
+                spherical.theta += (targetSpherical.theta - spherical.theta) * 0.1;
+                spherical.phi += (targetSpherical.phi - spherical.phi) * 0.1;
+                spherical.radius += (targetSpherical.radius - spherical.radius) * 0.1;
+                
+                camera.position.x = spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta);
+                camera.position.y = spherical.radius * Math.cos(spherical.phi);
+                camera.position.z = spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta);
+                camera.lookAt(targetPosition);
+                
+                // Floating animation
+                if (model) {
+                    modelGroup.position.y = Math.sin(time * 2) * 0.03;
+                }
+                
+                ring.rotation.z += 0.01;
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Resize handler
+            window.addEventListener('resize', () => {
+                camera.aspect = container.offsetWidth / container.offsetHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.offsetWidth, container.offsetHeight);
+            });
+            
+            // Controls
+            const btnTextured = document.getElementById('btn-textured');
+            const btnClay = document.getElementById('btn-clay');
+            const btnWireframe = document.getElementById('btn-wireframe');
+            const toggleAutorotate = document.getElementById('toggle-autorotate');
+            const btnReset = document.getElementById('btn-reset');
+            const btnFullscreen = document.getElementById('btn-fullscreen');
+            const lightingIntensity = document.getElementById('lighting-intensity');
+            
+            let currentMode = 'textured';
+            let originalMaterials = new Map();
+            
+            function updateRenderMode() {
+                if (!model) return;
+                
+                model.traverse((child) => {
+                    if (child.isMesh) {
+                        if (currentMode === 'textured' && originalMaterials.has(child.uuid)) {
+                            child.material = originalMaterials.get(child.uuid);
+                            child.material.wireframe = false;
+                        } else if (currentMode === 'clay') {
+                            if (!originalMaterials.has(child.uuid)) {
+                                originalMaterials.set(child.uuid, child.material);
+                            }
+                            child.material = new THREE.MeshStandardMaterial({
+                                color: 0xaaaaaa,
+                                metalness: 0.1,
+                                roughness: 0.9
+                            });
+                        } else if (currentMode === 'wireframe') {
+                            if (!originalMaterials.has(child.uuid)) {
+                                originalMaterials.set(child.uuid, child.material);
+                            }
+                            child.material = new THREE.MeshBasicMaterial({
+                                color: 0x6366f1,
+                                wireframe: true
+                            });
+                        }
+                    }
+                });
+            }
+            
+            btnTextured.addEventListener('click', () => {
+                currentMode = 'textured';
+                updateRenderMode();
+                btnTextured.classList.add('active');
+                btnClay.classList.remove('active');
+                btnWireframe.classList.remove('active');
+            });
+            
+            btnClay.addEventListener('click', () => {
+                currentMode = 'clay';
+                updateRenderMode();
+                btnClay.classList.add('active');
+                btnTextured.classList.remove('active');
+                btnWireframe.classList.remove('active');
+            });
+            
+            btnWireframe.addEventListener('click', () => {
+                currentMode = 'wireframe';
+                updateRenderMode();
+                btnWireframe.classList.add('active');
+                btnTextured.classList.remove('active');
+                btnClay.classList.remove('active');
+            });
+            
+            toggleAutorotate.addEventListener('change', (e) => {
+                autoRotate = e.target.checked;
+            });
+            
+            btnReset.addEventListener('click', () => {
+                targetSpherical = { theta: 0, phi: Math.PI / 3, radius: 4 };
+                autoRotate = true;
+                document.getElementById('toggle-autorotate').checked = true;
+            });
+            
+            btnFullscreen.addEventListener('click', () => {
+                const wrapper = document.querySelector('.viewer-wrapper');
+                if (document.fullscreenElement) {
+                    document.exitFullscreen();
+                } else {
+                    wrapper.requestFullscreen();
+                }
+            });
+            
+            lightingIntensity.addEventListener('input', (e) => {
+                const val = e.target.value / 100;
+                mainLight.intensity = val;
             });
         });
     </script>
