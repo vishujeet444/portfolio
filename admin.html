@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vishwajeet Kumar | Admin Portal</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="profile.jpeg">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Premium Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="admin.css">
+    
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Background Particles Canvas Canvas (matches portfolio) -->
+    <canvas id="bg-canvas"></canvas>
+    <div class="ambient-glow bg-glow-blue"></div>
+    <div class="ambient-glow bg-glow-purple"></div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen" class="screen active">
+        <div class="login-card glass-panel">
+            <div class="brand">
+                <i class="fa-solid fa-cube logo-icon"></i>
+                <h1>VISHWAJEET KUMAR</h1>
+                <p>3D PORTFOLIO ADMIN PORTAL</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="login-email"><i class="fa-regular fa-envelope"></i> Email Address</label>
+                    <input type="email" id="login-email" required placeholder="admin@vishwajeet.com">
+                </div>
+                
+                <div class="input-group">
+                    <label for="login-password"><i class="fa-solid fa-lock"></i> Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    <span>Login Securely</span>
+                    <i class="fa-solid fa-key"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. DASHBOARD SCREEN -->
+    <div id="dashboard-screen" class="screen">
+        <!-- Top Nav -->
+        <header class="admin-header glass-panel">
+            <div class="brand">
+                <i class="fa-solid fa-cubes logo-icon"></i>
+                <h2>VK<span>.ADMIN</span></h2>
+            </div>
+            <div class="user-meta">
+                <span id="user-email-display"><i class="fa-regular fa-user"></i> email@admin.com</span>
+                <button id="btn-logout" class="btn btn-danger">
+                    <span>Logout</span>
+                    <i class="fa-solid fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Body Wrapper -->
+        <div class="admin-main">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar glass-panel">
+                <nav class="sidebar-nav">
+                    <button class="nav-item active" data-tab="messages">
+                        <i class="fa-solid fa-envelope"></i>
+                        <span>Messages</span>
+                        <span class="badge" id="message-badge">0</span>
+                    </button>
+                    <button class="nav-item" data-tab="projects">
+                        <i class="fa-solid fa-images"></i>
+                        <span>Projects</span>
+                    </button>
+                    <button class="nav-item" data-tab="experience">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span>Experience</span>
+                    </button>
+                    <button class="nav-item" data-tab="settings">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>System Config</span>
+                    </button>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <main class="admin-content-area">
+                <!-- MESSAGES TAB -->
+                <section id="tab-messages" class="tab-content active">
+                    <div class="content-header">
+                        <div>
+                            <h3>Inbox Submissions</h3>
+                            <p>Manage contact form messages submitted by potential clients and recruiters.</p>
+                        </div>
+                        <button id="btn-refresh-messages" class="btn btn-secondary">
+                            <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div id="messages-list" class="messages-grid">
+                        <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading messages...</div>
+                    </div>
+                </section>
+
+                <!-- PROJECTS TAB -->
+                <section id="tab-projects" class="tab-content">
+                    <div class="content-header">
+                        <div>
+                            <h3>Project Showcase</h3>
+                            <p>Add, edit, or delete items displayed in your creative 3D gallery.</p>
+                        </div>
+                        <div class="header-actions">
+                            <button id="btn-add-project" class="btn btn-primary">
+                                <i class="fa-solid fa-plus"></i> Add New Project
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="projects-list" class="projects-grid">
+                        <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading projects...</div>
+                    </div>
+                </section>
+
+                <!-- EXPERIENCE TAB -->
+                <section id="tab-experience" class="tab-content">
+                    <div class="content-header">
+                        <div>
+                            <h3>Timeline milestones</h3>
+                            <p>Update your education background and work experience milestones.</p>
+                        </div>
+                        <button id="btn-add-experience" class="btn btn-primary">
+                            <i class="fa-solid fa-plus"></i> Add Milestone
+                        </button>
+                    </div>
+
+                    <div id="experience-list" class="experience-list-wrapper">
+                        <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading milestones...</div>
+                    </div>
+                </section>
+
+                <!-- SETTINGS TAB -->
+                <section id="tab-settings" class="tab-content">
+                    <div class="content-header">
+                        <div>
+                            <h3>System Configuration</h3>
+                            <p>View connection statuses and environment configurations.</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-card glass-panel">
+                        <div class="settings-row">
+                            <span class="label">API Base URL</span>
+                            <span class="value" id="settings-api-url">/api</span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="label">Database Status</span>
+                            <span class="value text-success"><i class="fa-solid fa-circle"></i> Connected (Supabase)</span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="label">Storage Bucket</span>
+                            <span class="value"><code>portfolio-assets</code></span>
+                        </div>
+                        <div class="settings-row">
+                            <span class="label">Security Credentials</span>
+                            <span class="value text-warning"><i class="fa-solid fa-shield-halved"></i> JWT Verification Active</span>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- 3. PROJECT MODAL -->
+    <div id="project-modal" class="modal-overlay">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3 id="project-modal-title">Add Project</h3>
+                <button class="modal-close" id="btn-close-project-modal"><i class="fa-solid fa-times"></i></button>
+            </div>
+            
+            <form id="project-form">
+                <input type="hidden" id="project-id">
+                
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label for="project-title">Project Title</label>
+                        <input type="text" id="project-title" required placeholder="e.g. Cyberpunk Bedroom Interior">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="project-category">Category</label>
+                        <select id="project-category" required>
+                            <option value="Modeling">Modeling</option>
+                            <option value="Texturing">Texturing</option>
+                            <option value="ArchViz">ArchViz</option>
+                            <option value="Lighting">Lighting</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="project-description">Project Details / Description</label>
+                    <textarea id="project-description" required rows="3" placeholder="Describe the modeling workflow, softwares used, and creative processes."></textarea>
+                </div>
+
+                <!-- Asset Upload Section -->
+                <div class="form-group uploads-group">
+                    <label>Renders & View Modes (Upload files directly to Supabase storage or insert URLs)</label>
+                    
+                    <div class="upload-row">
+                        <div class="upload-field">
+                            <label for="project-beauty-file"><i class="fa-solid fa-palette"></i> Beauty (Final Render) *</label>
+                            <input type="file" id="project-beauty-file" accept="image/*">
+                            <input type="text" id="project-beauty-url" required placeholder="Or paste absolute image URL">
+                        </div>
+                        <div class="upload-field">
+                            <label for="project-wire-file"><i class="fa-solid fa-border-all"></i> Wireframe (Optional)</label>
+                            <input type="file" id="project-wire-file" accept="image/*">
+                            <input type="text" id="project-wire-url" placeholder="Or paste absolute wireframe URL">
+                        </div>
+                        <div class="upload-field">
+                            <label for="project-clay-file"><i class="fa-solid fa-shapes"></i> Clay Mode (Optional)</label>
+                            <input type="file" id="project-clay-file" accept="image/*">
+                            <input type="text" id="project-clay-url" placeholder="Or paste absolute clay URL">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-project">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-project">
+                        <span>Save Project</span>
+                        <i class="fa-solid fa-save"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. EXPERIENCE MODAL -->
+    <div id="experience-modal" class="modal-overlay">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <h3 id="experience-modal-title">Add Milestone</h3>
+                <button class="modal-close" id="btn-close-experience-modal"><i class="fa-solid fa-times"></i></button>
+            </div>
+            
+            <form id="experience-form">
+                <input type="hidden" id="experience-id">
+                
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label for="exp-role">Role or Title</label>
+                        <input type="text" id="exp-role" required placeholder="e.g. Senior 3D Artist, Bachelor of Design">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="exp-type">Milestone Type</label>
+                        <select id="exp-type" required>
+                            <option value="work">Work History</option>
+                            <option value="education">Education</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="exp-company">Company or Institute</label>
+                        <input type="text" id="exp-company" required placeholder="e.g. TechFlow Studios, IIT Bombay">
+                    </div>
+                    <div class="form-group">
+                        <label for="exp-duration">Duration</label>
+                        <input type="text" id="exp-duration" required placeholder="e.g. 2024 - Present, 2020 - 2024">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="exp-description">Milestone Details</label>
+                    <textarea id="exp-description" required rows="3" placeholder="Describe achievements, responsibilities, or subjects covered."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-experience">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-experience">
+                        <span>Save Milestone</span>
+                        <i class="fa-solid fa-save"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="admin.js"></script>
+</body>
+</html>

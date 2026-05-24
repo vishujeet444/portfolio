@@ -50,8 +50,7 @@
     --light-text: #1a1a2e;
 }
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700&display=swap');
+/* Google Fonts are loaded via <link> in the HTML <head> — no @import needed */
 
 /* Base Reset */
 *, *::before, *::after {
@@ -106,7 +105,8 @@ a:hover {
 /* ===========================================
    THREE.JS CANVAS BACKGROUND
    =========================================== */
-#three-canvas {
+/* Background particle canvas (renamed from #three-canvas to avoid ID conflict with 3D viewer) */
+#bg-canvas {
     position: fixed;
     top: 0;
     left: 0;
@@ -648,6 +648,45 @@ a:hover {
     background: radial-gradient(ellipse, var(--gradient-glow) 0%, transparent 70%);
     z-index: -1;
     pointer-events: none;
+}
+
+/* Video Play/Pause Overlay Button */
+.video-play-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(0, 212, 255, 0.15);
+    border: 2px solid rgba(0, 212, 255, 0.6);
+    color: #ffffff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+}
+
+.video-play-btn:hover {
+    background: rgba(0, 212, 255, 0.3);
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 50px rgba(0, 212, 255, 0.5);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+.video-play-btn.playing {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.video-container:hover .video-play-btn.playing {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .showreel-subtitle {
@@ -1709,6 +1748,16 @@ a:hover {
     width: 100%;
     border-radius: 12px;
     animation: image-scale-in 0.5s ease;
+    transition: filter 0.5s ease;
+}
+
+/* Cinematic Simulated Render Modes */
+.modal-image.wire-render {
+    filter: grayscale(1) invert(1) contrast(2) brightness(0.9) sepia(1) hue-rotate(185deg) saturate(8);
+}
+
+.modal-image.clay-render {
+    filter: grayscale(1) brightness(1.25) contrast(0.65);
 }
 
 @keyframes image-scale-in {

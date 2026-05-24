@@ -179,28 +179,60 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = projectData[projectId];
             
             if (data) {
+                // Store the current project ID on the modal so tab-switching can read it
+                modal.dataset.currentProject = projectId;
+
                 modalImage.src = data.image;
+                // Reset rendering modes filters on open
+                modalImage.classList.remove('wire-render', 'clay-render');
+                
                 modalTitle.textContent = data.title;
                 modalDesc.textContent = data.desc;
+
+                // Show tools used
+                const modalTools = document.getElementById('modal-tools');
+                if (modalTools) {
+                    modalTools.textContent = data.tools ? `🛠 Tools: ${data.tools}` : '';
+                }
+
+                // Populate gallery with project-specific thumbnails (all 3 render modes)
+                const modalGallery = document.getElementById('modal-gallery');
+                if (modalGallery && data.views) {
+                    const viewLabels = { beauty: 'Final Render', wire: 'Wireframe', clay: 'Clay Mode' };
+                    modalGallery.innerHTML = Object.entries(data.views).map(([key, url]) => `
+                        <img src="${url}" alt="${viewLabels[key] || key}" title="${viewLabels[key] || key}" loading="lazy"
+                             style="cursor:pointer;" onclick="document.getElementById('modal-image').src='${url}'; document.getElementById('modal-image').className='modal-image ${key === 'wire' ? 'wire-render' : key === 'clay' ? 'clay-render' : ''}'; document.querySelectorAll('.modal-tabs button').forEach(b=>{b.classList.remove('active'); if(b.dataset.type==='${key}') b.classList.add('active');})">
+                    `).join('');
+                }
+
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden';
                 
-                // Reset tabs
+                // Reset tabs to "Final" view
                 modalTabs.forEach(tab => tab.classList.remove('active'));
                 modalTabs[0].classList.add('active');
             }
         });
     });
 
-    // Tab switching
+    // Tab switching — reads project ID stored on the modal element
     modalTabs.forEach(tab => {
         tab.addEventListener('click', () => {
             const type = tab.dataset.type;
-            const currentProject = document.querySelector('.work-item.active')?.dataset.project || 'project1';
+            // Use the stored project ID instead of the unreliable hover-based .active class
+            const currentProject = modal.dataset.currentProject || 'project1';
             const data = projectData[currentProject];
             
             if (data && data.views && data.views[type]) {
                 modalImage.src = data.views[type];
+            }
+            
+            // Dynamic CSS simulated render modes
+            modalImage.classList.remove('wire-render', 'clay-render');
+            if (type === 'wire') {
+                modalImage.classList.add('wire-render');
+            } else if (type === 'clay') {
+                modalImage.classList.add('clay-render');
             }
             
             modalTabs.forEach(t => t.classList.remove('active'));
@@ -301,18 +333,47 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // VIDEO PLAY ON HOVER (SHOWREEL)
+    // VIDEO PLAY/PAUSE BUTTON (SHOWREEL)
     // ==========================================
-    const videoContainer = document.querySelector('.video-container');
-    const showreelVideo = document.querySelector('.cinematic-video');
-    
-    if (videoContainer && showreelVideo) {
-        videoContainer.addEventListener('mouseenter', () => {
-            // Only autoplay if user hasn't interacted with the video
-            if (showreelVideo.paused && window.innerWidth > 768) {
-                // Don't autoplay - just show play button hint
+    const videoContainer  = document.querySelector('.video-container');
+    const showreelVideo   = document.getElementById('showreel-video');
+    const videoPlayBtn    = document.getElementById('video-play-btn');
+    const playIcon        = videoPlayBtn ? videoPlayBtn.querySelector('.play-icon')  : null;
+    const pauseIcon       = videoPlayBtn ? videoPlayBtn.querySelector('.pause-icon') : null;
+
+    function updatePlayBtnState() {
+        if (!videoPlayBtn) return;
+        if (showreelVideo.paused) {
+            videoPlayBtn.classList.remove('playing');
+            if (playIcon)  playIcon.style.display  = '';
+            if (pauseIcon) pauseIcon.style.display = 'none';
+        } else {
+            videoPlayBtn.classList.add('playing');
+            if (playIcon)  playIcon.style.display  = 'none';
+            if (pauseIcon) pauseIcon.style.display = '';
+        }
+    }
+
+    if (videoPlayBtn && showreelVideo) {
+        videoPlayBtn.addEventListener('click', () => {
+            // Trigger lazy-load on first play
+            const source = showreelVideo.querySelector('source');
+            if (source && source.dataset.src && !source.src) {
+                source.src = source.dataset.src;
+                showreelVideo.load();
             }
+
+            if (showreelVideo.paused) {
+                showreelVideo.play().catch(() => {});
+            } else {
+                showreelVideo.pause();
+            }
+            updatePlayBtnState();
         });
+
+        showreelVideo.addEventListener('play',  updatePlayBtnState);
+        showreelVideo.addEventListener('pause', updatePlayBtnState);
+        showreelVideo.addEventListener('ended', updatePlayBtnState);
     }
 
     // ==========================================
@@ -354,15 +415,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==========================================
-    // CONTACT FORM VALIDATION
+    // CONTACT FORM — Validation + API Submit
     // ==========================================
-    const contactForm = document.querySelector('.contact-form');
+    const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            const inputs = contactForm.querySelectorAll('input[required], textarea[required]');
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nameEl    = document.getElementById('cf-name');
+            const emailEl   = document.getElementById('cf-email');
+            const messageEl = document.getElementById('cf-message');
+            const submitBtn = document.getElementById('cf-submit');
+            const statusEl  = document.getElementById('cf-status');
+
+            // --- Client-side validation ---
             let isValid = true;
-            
-            inputs.forEach(input => {
+            [nameEl, emailEl, messageEl].forEach(input => {
                 if (!input.value.trim()) {
                     isValid = false;
                     input.style.borderColor = '#ff4444';
@@ -370,9 +438,62 @@ document.addEventListener('DOMContentLoaded', function() {
                     input.style.borderColor = '';
                 }
             });
-            
+
+            // Basic email format check
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailEl.value.trim() && !emailRegex.test(emailEl.value.trim())) {
+                isValid = false;
+                emailEl.style.borderColor = '#ff4444';
+            }
+
             if (!isValid) {
-                e.preventDefault();
+                statusEl.style.display = 'block';
+                statusEl.style.background = 'rgba(255,68,68,0.15)';
+                statusEl.style.color = '#ff6b6b';
+                statusEl.style.border = '1px solid rgba(255,68,68,0.4)';
+                statusEl.textContent = '⚠️ Please fill in all fields with a valid email address.';
+                return;
+            }
+
+            // --- Disable button & show loading ---
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            statusEl.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name:    nameEl.value.trim(),
+                        email:   emailEl.value.trim(),
+                        message: messageEl.value.trim()
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Success
+                    statusEl.style.display = 'block';
+                    statusEl.style.background = 'rgba(0,212,255,0.1)';
+                    statusEl.style.color = '#00d4ff';
+                    statusEl.style.border = '1px solid rgba(0,212,255,0.3)';
+                    statusEl.textContent = '✅ Message sent! I\'ll get back to you soon.';
+                    contactForm.reset();
+                    [nameEl, emailEl, messageEl].forEach(i => i.style.borderColor = '');
+                } else {
+                    throw new Error(result.error || 'Unknown error');
+                }
+            } catch (err) {
+                statusEl.style.display = 'block';
+                statusEl.style.background = 'rgba(255,68,68,0.15)';
+                statusEl.style.color = '#ff6b6b';
+                statusEl.style.border = '1px solid rgba(255,68,68,0.4)';
+                statusEl.textContent = `❌ Failed to send: ${err.message}. Please email me directly.`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Send Message';
             }
         });
     }
@@ -480,3 +601,27 @@ if (window.performance && window.performance.mark) {
 
 console.log('%c🎬 Vishwajeet Kumar Portfolio', 'color: #00d4ff; font-size: 20px; font-weight: bold;');
 console.log('%c3D Cinematic Artist', 'color: #bf00ff; font-size: 14px;');
+
+// ==========================================
+// LAZY LOAD SHOWREEL VIDEO (48MB optimization)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const showreelVideo = document.getElementById('showreel-video');
+    if (showreelVideo) {
+        const videoObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const source = showreelVideo.querySelector('source');
+                    if (source && source.dataset.src) {
+                        source.src = source.dataset.src;
+                        showreelVideo.load();
+                        showreelVideo.play().catch(e => console.log("Video playback delayed or user interaction needed"));
+                    }
+                    observer.unobserve(showreelVideo);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        videoObserver.observe(showreelVideo);
+    }
+});

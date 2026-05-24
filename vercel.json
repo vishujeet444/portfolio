@@ -1,11 +1,43 @@
 {
-  "buildCommand": null,
-  "outputDirectory": ".",
-  "framework": null,
-  "rewrites": [
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "cleanUrls": true,
+
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control",           "value": "no-store, no-cache, must-revalidate" },
+        { "key": "X-Content-Type-Options",  "value": "nosniff" },
+        { "key": "X-Frame-Options",         "value": "DENY" },
+        { "key": "X-XSS-Protection",        "value": "1; mode=block" }
+      ]
+    },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "headers": [
+        { "key": "X-Content-Type-Options",  "value": "nosniff" },
+        { "key": "X-Frame-Options",         "value": "SAMEORIGIN" },
+        { "key": "Referrer-Policy",         "value": "strict-origin-when-cross-origin" }
+      ]
     }
-  ]
+  ],
+
+  "rewrites": [
+    { "source": "/admin",              "destination": "/admin.html" },
+    { "source": "/api/health",         "destination": "/api/health.js" },
+    { "source": "/api/stats",          "destination": "/api/stats.js" },
+    { "source": "/api/contact",        "destination": "/api/contact.js" },
+    { "source": "/api/messages",       "destination": "/api/messages.js" },
+    { "source": "/api/projects",       "destination": "/api/projects.js" },
+    { "source": "/api/experience",     "destination": "/api/experience.js" }
+  ],
+
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 10
+    }
+  }
 }
