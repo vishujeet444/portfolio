@@ -38,9 +38,9 @@
   animation: none;
 }
 
-[data-reduce-motion='true'] *,
-[data-reduce-motion='true'] *::before,
-[data-reduce-motion='true'] *::after {
+[data-reduce-motion='true'] *:not([data-motion]),
+[data-reduce-motion='true'] *:not([data-motion])::before,
+[data-reduce-motion='true'] *:not([data-motion])::after {
   animation-duration: 0.01ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;

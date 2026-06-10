@@ -62,7 +62,7 @@ export default function Hero() {
 
       <div className="hero-stack relative z-10 w-full max-w-4xl">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.35 }}
           className="flex items-center justify-center gap-4"
@@ -76,10 +76,11 @@ export default function Hero() {
           {['Vishwajeet', 'Kumar'].map((line, i) => (
             <motion.span
               key={line}
-              initial={{ opacity: 0, y: 40, letterSpacing: '0.02em' }}
-              animate={{ opacity: 1, y: 0, letterSpacing: 'var(--tracking-hero)' }}
+              initial={false}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.1, delay: 0.5 + i * 0.14, ease: [0.16, 1, 0.3, 1] }}
               className="hero-title-line block text-gradient-luxury"
+              style={{ letterSpacing: 'var(--tracking-hero)' }}
             >
               {line}
             </motion.span>
@@ -87,7 +88,7 @@ export default function Hero() {
         </h1>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1.2 }}
           className="type-hero-sub min-h-[2rem] flex items-center justify-center"
@@ -96,7 +97,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.p
-          initial={{ opacity: 0, y: 16 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.45 }}
           className="type-body mx-auto text-center"
@@ -105,7 +106,7 @@ export default function Hero() {
         </motion.p>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.65 }}
           className="hero-actions"
@@ -127,7 +128,7 @@ export default function Hero() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 1.85 }}
           className="hero-stats pt-4"
@@ -146,7 +147,7 @@ export default function Hero() {
       </div>
 
       <motion.button
-        initial={{ opacity: 0 }}
+        initial={false}
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 2.2 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 cursor-pointer"
@@ -173,7 +174,7 @@ export default function Hero() {
       </div>
 
       <motion.div
-        initial={{ opacity: 0, x: 16 }}
+        initial={false}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 1, delay: 2 }}
         className="hero-side-rail absolute right-8 top-1/2 -translate-y-1/2 flex-col items-center gap-4"

@@ -26,6 +26,7 @@ export default function useScrollReveal(enabled = true) {
             y: 0,
             duration: 1.1,
             ease: 'power3.out',
+            immediateRender: false,
             scrollTrigger: {
               trigger: el,
               start: 'top 88%',
@@ -49,6 +50,7 @@ export default function useScrollReveal(enabled = true) {
             duration: 0.9,
             stagger: 0.08,
             ease: 'power3.out',
+            immediateRender: false,
             scrollTrigger: {
               trigger: container,
               start: 'top 85%',

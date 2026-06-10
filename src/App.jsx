@@ -18,19 +18,22 @@ import useScrollProgress from './hooks/useScrollProgress';
 import SceneErrorBoundary from './components/SceneErrorBoundary';
 
 const CustomCursor = lazy(() => import('./components/CustomCursor'));
-
 const GalaxyScene = lazy(() => import('./components/GalaxyScene'));
 const Projects = lazy(() => import('./components/Projects'));
 const Interactive3DLab = lazy(() => import('./components/Interactive3DLab'));
 
 export default function App() {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(() =>
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
   const { progressRef, showBackToTop } = useScrollProgress();
   const { reduceEffects } = useResponsive();
 
   const mouse = useRef({ x: 0, y: 0 });
   const scrollY = useRef(0);
   const handleLoaded = useCallback(() => setLoaded(true), []);
+
   useSmoothScroll(loaded);
   useScrollReveal(loaded);
 
@@ -68,8 +71,8 @@ export default function App() {
         Skip to content
       </a>
 
-      <AnimatePresence>
-        {!loaded && <Loader onComplete={handleLoaded} />}
+      <AnimatePresence mode="wait">
+        {!loaded && <Loader key="loader" onComplete={handleLoaded} />}
       </AnimatePresence>
 
       {loaded && (
@@ -100,7 +103,7 @@ export default function App() {
 
       {loaded && (
         <SceneErrorBoundary>
-          <Suspense fallback={<div className="fixed inset-0 z-0" style={{ background: '#050508' }} />}>
+          <Suspense fallback={null}>
             <GalaxyScene mouse={mouse} scrollY={scrollY} />
           </Suspense>
         </SceneErrorBoundary>
@@ -108,7 +111,7 @@ export default function App() {
 
       <AmbientLayers />
 
-      <div className="relative z-10">
+      <div className="relative z-10 app-shell">
         <DynamicIsland />
         <Navbar />
         <main id="main">
@@ -136,7 +139,7 @@ export default function App() {
       <AnimatePresence>
         {showBackToTop && (
           <motion.button
-            initial={{ opacity: 0, y: 12 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 12 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}

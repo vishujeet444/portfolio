@@ -4,16 +4,14 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
-    include: ['three', '@react-three/fiber', '@react-three/drei', 'gsap', 'framer-motion'],
+    include: ['three', '@react-three/fiber', '@react-three/drei', 'gsap', 'framer-motion', 'lenis'],
   },
   server: {
-    host: 'localhost',
+    // Listen on IPv4 + IPv6 — host:'localhost' was IPv6-only on Windows (Chrome can fail on 127.0.0.1)
+    host: true,
     port: 5173,
-    open: true,
-    watch: {
-      usePolling: true,
-      interval: 1000,
-    },
+    strictPort: true,
+    open: '/',
   },
   build: {
     target: 'esnext',
@@ -23,7 +21,6 @@ export default defineConfig({
           three: ['three'],
           r3f: ['@react-three/fiber', '@react-three/drei'],
           gsap: ['gsap', 'gsap/ScrollTrigger'],
-          motion: ['framer-motion'],
         },
       },
     },

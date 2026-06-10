@@ -39,7 +39,7 @@ export default function Navbar() {
 
   return (
     <motion.header
-      initial={{ y: -80, opacity: 0 }}
+      initial={false}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 1, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
       className="site-header fixed top-0 left-0 right-0 z-50 flex items-center justify-center py-3 md:py-4 pointer-events-none"

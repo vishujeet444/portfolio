@@ -64,11 +64,8 @@ export default function Loader({ onComplete }) {
             'bottom-8 left-8 border-b border-l',
             'bottom-8 right-8 border-b border-r',
           ].map((cls, i) => (
-            <motion.div
+            <div
               key={i}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
               className={`absolute w-10 h-10 ${cls}`}
               style={{ borderColor: 'rgba(0,255,136,0.3)' }}
             />
@@ -122,22 +119,12 @@ export default function Loader({ onComplete }) {
           </div>
 
           {/* Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 10, letterSpacing: '0.2em' }}
-            animate={{ opacity: 1, y: 0, letterSpacing: '0.6em' }}
-            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className="type-card-title text-white/25 mb-3"
-          >
+          <div className="type-card-title text-white/25 mb-3" style={{ letterSpacing: '0.6em' }}>
             Vishwajeet
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="type-label mb-10 text-[var(--neon)]/50"
-          >
+          </div>
+          <div className="type-label mb-10 text-[var(--neon)]/50">
             3D Cinematic Artist
-          </motion.div>
+          </div>
 
           {/* Progress bar */}
           <div
@@ -163,14 +150,9 @@ export default function Loader({ onComplete }) {
             0%
           </span>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="mt-8 type-label !text-[0.65rem]"
-          >
+          <div className="mt-8 type-label !text-[0.65rem]">
             Initializing experience
-          </motion.div>
+          </div>
 
           {/* Data stream lines on sides */}
           {['-left-0', 'right-0'].map((side, idx) => (

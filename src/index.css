@@ -1215,15 +1215,25 @@
     scroll-behavior: auto;
   }
 
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+  .ambient-stars,
+  .ambient-light-shafts,
+  .marquee-track,
+  .grain-overlay,
+  .loader-ring {
+    animation: none !important;
   }
+}
 
-  .marquee-track {
-    animation: none;
-  }
+/* Always-visible shell — prevents blank screen if JS animations fail */
+#root {
+  min-height: 100vh;
+}
+
+.app-shell,
+.app-shell main,
+#hero,
+.hero-stack,
+.hero-stack * {
+  opacity: 1;
+  visibility: visible;
 }
