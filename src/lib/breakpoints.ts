@@ -17,6 +17,8 @@ export type ParticleBudget = {
   ringPoints: number;
   ringCount: number;
   dpr: [number, number];
+  /** Skip WebGL extras (nebula, dust, extra rings) */
+  lite: boolean;
 };
 
 export function tierFromWidth(width: number): DeviceTier {
@@ -27,23 +29,23 @@ export function tierFromWidth(width: number): DeviceTier {
   return 'mobile';
 }
 
+/** ~3.5k mobile · ~10k tablet · ~22k desktop — ~80% reduction vs prior caps */
 export function getParticleBudget(tier: DeviceTier): ParticleBudget {
   switch (tier) {
     case 'mobile':
-      return { galaxy: 9000, stars: 4000, nebula: 80, dust: 50, ringPoints: 60, ringCount: 1, dpr: [0.75, 1] };
+      return { galaxy: 0, stars: 0, nebula: 0, dust: 0, ringPoints: 0, ringCount: 0, dpr: [1, 1], lite: true };
     case 'tablet':
-      return { galaxy: 26000, stars: 12000, nebula: 180, dust: 100, ringPoints: 90, ringCount: 2, dpr: [1, 1.2] };
+      return { galaxy: 3500, stars: 2000, nebula: 0, dust: 0, ringPoints: 48, ringCount: 1, dpr: [1, 1.1], lite: true };
     case 'laptop':
-      return { galaxy: 38000, stars: 18000, nebula: 200, dust: 110, ringPoints: 90, ringCount: 2, dpr: [1, 1.25] };
+      return { galaxy: 8000, stars: 4000, nebula: 60, dust: 0, ringPoints: 56, ringCount: 1, dpr: [1, 1.2], lite: true };
     case 'desktop':
-      return { galaxy: 52000, stars: 22000, nebula: 240, dust: 140, ringPoints: 100, ringCount: 3, dpr: [1, 1.35] };
+      return { galaxy: 12000, stars: 5500, nebula: 80, dust: 40, ringPoints: 64, ringCount: 2, dpr: [1, 1.25], lite: false };
     case 'ultra':
     default:
-      return { galaxy: 58000, stars: 24000, nebula: 260, dust: 150, ringPoints: 110, ringCount: 3, dpr: [1, 1.4] };
+      return { galaxy: 15000, stars: 6500, nebula: 100, dust: 50, ringPoints: 72, ringCount: 2, dpr: [1, 1.3], lite: false };
   }
 }
 
-/** ~15k mobile · ~40k tablet · ~100k desktop+ */
 export function getTotalParticles(budget: ParticleBudget): number {
   return budget.galaxy + budget.stars + budget.nebula + budget.dust + budget.ringPoints * budget.ringCount;
 }

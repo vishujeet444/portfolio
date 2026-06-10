@@ -1,0 +1,1 @@
+import{r as t}from"./motion-DxS4zF-f.js";function o(){const[i,n]=t.useState(typeof document<"u"?!document.hidden:!0);return t.useEffect(()=>{const e=()=>n(!document.hidden);return document.addEventListener("visibilitychange",e),()=>document.removeEventListener("visibilitychange",e)},[]),i}export{o as u};

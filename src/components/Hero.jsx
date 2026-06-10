@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import { SITE, SOCIAL_LINKS, scrollToSection } from '../lib/constants';
 import MagneticButton from './MagneticButton';
 
@@ -45,7 +44,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="hero-section relative flex flex-col items-center justify-center text-center z-10 overflow-hidden"
+      className="hero-section hero-enter relative flex flex-col items-center justify-center text-center z-10 overflow-hidden"
     >
       <div
         className="absolute inset-0 pointer-events-none"
@@ -61,56 +60,33 @@ export default function Hero() {
       />
 
       <div className="hero-stack relative z-10 w-full max-w-4xl">
-        <motion.div
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.35 }}
-          className="flex items-center justify-center gap-4"
-        >
+        <div className="hero-enter-item flex items-center justify-center gap-4">
           <span className="block w-12 h-px bg-gradient-to-r from-transparent to-white/20" />
           <span className="type-label text-[var(--neon)]/60">Portfolio {SITE.year}</span>
           <span className="block w-12 h-px bg-gradient-to-l from-transparent to-white/20" />
-        </motion.div>
+        </div>
 
         <h1 className="font-display w-full">
-          {['Vishwajeet', 'Kumar'].map((line, i) => (
-            <motion.span
+          {['Vishwajeet', 'Kumar'].map((line) => (
+            <span
               key={line}
-              initial={false}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.1, delay: 0.5 + i * 0.14, ease: [0.16, 1, 0.3, 1] }}
-              className="hero-title-line block text-gradient-luxury"
+              className="hero-enter-item hero-title-line block text-gradient-luxury"
               style={{ letterSpacing: 'var(--tracking-hero)' }}
             >
               {line}
-            </motion.span>
+            </span>
           ))}
         </h1>
 
-        <motion.div
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          className="type-hero-sub min-h-[2rem] flex items-center justify-center"
-        >
+        <div className="hero-enter-item type-hero-sub min-h-[2rem] flex items-center justify-center">
           <TypingRoles />
-        </motion.div>
+        </div>
 
-        <motion.p
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.45 }}
-          className="type-body mx-auto text-center"
-        >
+        <p className="hero-enter-item type-body mx-auto text-center">
           {SITE.tagline}
-        </motion.p>
+        </p>
 
-        <motion.div
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.65 }}
-          className="hero-actions"
-        >
+        <div className="hero-enter-item hero-actions">
           <MagneticButton
             variant="primary"
             href="#works"
@@ -125,14 +101,9 @@ export default function Hero() {
           >
             Get In Touch
           </MagneticButton>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 1.85 }}
-          className="hero-stats pt-4"
-        >
+        <div className="hero-enter-item hero-stats pt-4">
           {[
             { num: '5+', label: 'Years' },
             { num: '100+', label: 'Projects' },
@@ -143,26 +114,18 @@ export default function Hero() {
               <div className="type-label mt-2">{label}</div>
             </div>
           ))}
-        </motion.div>
+        </div>
       </div>
 
-      <motion.button
-        initial={false}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 2.2 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 cursor-pointer"
+      <button
+        type="button"
+        className="hero-enter-item absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 cursor-pointer"
         onClick={scrollDown}
         aria-label="Scroll to works"
       >
         <span className="type-label">Scroll</span>
-        <div className="relative w-px h-12 overflow-hidden bg-gradient-to-b from-[var(--neon)]/40 to-transparent">
-          <motion.div
-            className="absolute top-0 left-0 w-full bg-[var(--neon)]"
-            animate={{ height: ['0%', '100%', '0%'], top: ['0%', '0%', '100%'] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </div>
-      </motion.button>
+        <div className="scroll-cue" aria-hidden />
+      </button>
 
       <div className="hero-side-rail absolute left-8 top-1/2 -translate-y-1/2 flex-col items-center gap-2 opacity-[0.12]">
         <span
@@ -173,12 +136,7 @@ export default function Hero() {
         </span>
       </div>
 
-      <motion.div
-        initial={false}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 2 }}
-        className="hero-side-rail absolute right-8 top-1/2 -translate-y-1/2 flex-col items-center gap-4"
-      >
+      <div className="hero-enter-item hero-side-rail absolute right-8 top-1/2 -translate-y-1/2 flex-col items-center gap-4">
         {SOCIAL_LINKS.map((s) => (
           <a
             key={s.label}
@@ -192,7 +150,7 @@ export default function Hero() {
             {s.short}
           </a>
         ))}
-      </motion.div>
+      </div>
     </section>
   );
 }

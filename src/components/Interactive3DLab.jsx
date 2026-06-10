@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback, Suspense, lazy } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useInView } from 'framer-motion';
 import SectionHeader from './SectionHeader';
 import { fetchModels } from '../lib/modelsApi';
 import { useResponsive } from '../context/ResponsiveProvider';
@@ -36,6 +36,7 @@ export default function Interactive3DLab() {
   const { isMobile } = useResponsive();
 
   useEffect(() => {
+    if (!inView) return undefined;
     let cancelled = false;
     (async () => {
       setLoading(true);
@@ -47,7 +48,7 @@ export default function Interactive3DLab() {
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [inView]);
 
   const handleStats = useCallback((s) => {
     setStats(s);
@@ -79,7 +80,7 @@ export default function Interactive3DLab() {
         <div className="lab-fog" />
         <div className="lab-light-shaft lab-light-shaft--left" />
         <div className="lab-light-shaft lab-light-shaft--right" />
-        {[...Array(24)].map((_, i) => (
+        {[...Array(isMobile ? 6 : 10)].map((_, i) => (
           <span key={i} className="lab-particle" style={{ '--i': i }} />
         ))}
       </div>
@@ -92,27 +93,16 @@ export default function Interactive3DLab() {
           titleAccent="Lab"
         />
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.2 }}
-          className="type-body max-w-2xl mb-12 -mt-6"
-        >
+        <p className="type-body max-w-2xl mb-12 -mt-6" data-reveal>
           Orbit, inspect materials, and explore GLB assets in real time. Upload new models from the admin panel.
-        </motion.p>
+        </p>
 
         {loading ? (
           <div className="lab-loading type-label">Initializing lab…</div>
         ) : (
           <div className="lab-grid" data-reveal-stagger>
             {/* Viewer */}
-            <motion.div
-              data-reveal-child
-              initial={{ opacity: 0, x: -24 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8 }}
-              className="lab-viewer-card"
-            >
+            <div data-reveal-child className="lab-viewer-card">
               <div className="lab-viewer-toolbar">
                 <span className="type-label text-[var(--neon)]/70">Live viewer</span>
                 <div className="lab-toolbar-actions">
@@ -139,6 +129,7 @@ export default function Interactive3DLab() {
 
               <Suspense fallback={<div className="lab-viewer-fallback"><div className="lab-spinner" /></div>}>
                 <ModelScene
+                  active={inView}
                   modelUrl={active?.model_url}
                   envPreset={envPreset}
                   wireframe={wireframe}
@@ -152,14 +143,11 @@ export default function Interactive3DLab() {
                   onStats={handleStats}
                 />
               </Suspense>
-            </motion.div>
+            </div>
 
             {/* Details panel */}
-            <motion.aside
+            <aside
               data-reveal-child
-              initial={{ opacity: 0, x: 24 }}
-              animate={inView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.1 }}
               className={`lab-details-panel glass-stat ${isMobile ? 'lab-details-panel--mobile' : ''}`}
             >
               <details className="lab-details-accordion" open={!isMobile}>
@@ -301,7 +289,7 @@ export default function Interactive3DLab() {
               )}
               </div>
               </details>
-            </motion.aside>
+            </aside>
           </div>
         )}
       </div>

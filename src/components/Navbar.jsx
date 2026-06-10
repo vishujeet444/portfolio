@@ -17,9 +17,25 @@ export default function Navbar() {
   const showDock = !isMobile;
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    let raf = 0;
+    let last = window.scrollY > 40;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        const next = window.scrollY > 40;
+        if (next !== last) {
+          last = next;
+          setScrolled(next);
+        }
+        raf = 0;
+      });
+    };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   useEffect(() => {
@@ -38,12 +54,7 @@ export default function Navbar() {
   };
 
   return (
-    <motion.header
-      initial={false}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1, delay: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="site-header fixed top-0 left-0 right-0 z-50 flex items-center justify-center py-3 md:py-4 pointer-events-none"
-    >
+    <header className="site-header fixed top-0 left-0 right-0 z-50 flex items-center justify-center py-3 md:py-4 pointer-events-none">
       <div className="site-header__inner w-full flex items-center justify-between pointer-events-auto">
         <a
           href="#hero"
@@ -147,6 +158,6 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
-    </motion.header>
+    </header>
   );
 }

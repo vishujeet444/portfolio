@@ -1,19 +1,14 @@
 import { useState, useRef, useEffect, Suspense, lazy, useCallback } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 
 import Loader from './components/Loader';
 import AmbientLayers from './components/AmbientLayers';
 import Navbar from './components/Navbar';
 import DynamicIsland from './components/DynamicIsland';
 import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import Experience from './components/Experience';
-import Contact from './components/Contact';
 import Footer from './components/Footer';
 import { useResponsive } from './context/ResponsiveProvider';
 import useSmoothScroll from './hooks/useSmoothScroll';
-import useScrollReveal from './hooks/useScrollReveal';
+import useIntersectionReveal from './hooks/useIntersectionReveal';
 import useScrollProgress from './hooks/useScrollProgress';
 import SceneErrorBoundary from './components/SceneErrorBoundary';
 
@@ -21,6 +16,10 @@ const CustomCursor = lazy(() => import('./components/CustomCursor'));
 const GalaxyScene = lazy(() => import('./components/GalaxyScene'));
 const Projects = lazy(() => import('./components/Projects'));
 const Interactive3DLab = lazy(() => import('./components/Interactive3DLab'));
+const About = lazy(() => import('./components/About'));
+const Skills = lazy(() => import('./components/Skills'));
+const Experience = lazy(() => import('./components/Experience'));
+const Contact = lazy(() => import('./components/Contact'));
 
 export default function App() {
   const [loaded, setLoaded] = useState(() =>
@@ -31,13 +30,17 @@ export default function App() {
   const { reduceEffects } = useResponsive();
 
   const mouse = useRef({ x: 0, y: 0 });
-  const scrollY = useRef(0);
   const handleLoaded = useCallback(() => setLoaded(true), []);
+  const showGalaxy = loaded && !reduceEffects;
 
-  useSmoothScroll(loaded);
-  useScrollReveal(loaded);
+  useSmoothScroll();
+  useIntersectionReveal(loaded);
 
   useEffect(() => {
+    if (!showGalaxy) return undefined;
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+    if (!finePointer.matches) return undefined;
+
     const onMouseMove = (e) => {
       mouse.current = {
         x: (e.clientX / window.innerWidth) * 2 - 1,
@@ -46,24 +49,7 @@ export default function App() {
     };
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     return () => window.removeEventListener('mousemove', onMouseMove);
-  }, []);
-
-  useEffect(() => {
-    let raf = 0;
-    const onScroll = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        scrollY.current = window.scrollY;
-        raf = 0;
-      });
-    };
-    scrollY.current = window.scrollY;
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (raf) cancelAnimationFrame(raf);
-    };
-  }, []);
+  }, [showGalaxy]);
 
   return (
     <>
@@ -71,9 +57,7 @@ export default function App() {
         Skip to content
       </a>
 
-      <AnimatePresence mode="wait">
-        {!loaded && <Loader key="loader" onComplete={handleLoaded} />}
-      </AnimatePresence>
+      {!loaded && <Loader onComplete={handleLoaded} />}
 
       {loaded && (
         <Suspense fallback={null}>
@@ -91,25 +75,15 @@ export default function App() {
         aria-label="Page scroll progress"
       />
 
-      {!reduceEffects && (
-        <div
-          aria-hidden
-          className="grain-overlay fixed inset-0 z-[9990] pointer-events-none opacity-[0.018]"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          }}
-        />
-      )}
-
-      {loaded && (
+      {showGalaxy && (
         <SceneErrorBoundary>
           <Suspense fallback={null}>
-            <GalaxyScene mouse={mouse} scrollY={scrollY} />
+            <GalaxyScene mouse={mouse} />
           </Suspense>
         </SceneErrorBoundary>
       )}
 
-      <AmbientLayers />
+      {!showGalaxy && <AmbientLayers />}
 
       <div className="relative z-10 app-shell">
         <DynamicIsland />
@@ -125,34 +99,38 @@ export default function App() {
             <Interactive3DLab />
           </Suspense>
           <div className="section-bridge" aria-hidden />
-          <About />
+          <Suspense fallback={<div className="section-pad section-container" aria-hidden />}>
+            <About />
+          </Suspense>
           <div className="section-bridge" aria-hidden />
-          <Skills />
+          <Suspense fallback={<div className="section-pad section-container" aria-hidden />}>
+            <Skills />
+          </Suspense>
           <div className="section-bridge" aria-hidden />
-          <Experience />
+          <Suspense fallback={<div className="section-pad section-container" aria-hidden />}>
+            <Experience />
+          </Suspense>
           <div className="section-bridge" aria-hidden />
-          <Contact />
+          <Suspense fallback={<div className="section-pad section-container" aria-hidden />}>
+            <Contact />
+          </Suspense>
         </main>
         <Footer />
       </div>
 
-      <AnimatePresence>
-        {showBackToTop && (
-          <motion.button
-            initial={false}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 12 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="back-to-top fixed z-50 w-11 h-11 rounded-full flex items-center justify-center glass-stat"
-            aria-label="Back to top"
-            data-cursor
-          >
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4 text-[var(--neon)]" aria-hidden>
-              <path d="M8 13V3M3 8l5-5 5 5" />
-            </svg>
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {showBackToTop && (
+        <button
+          type="button"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="back-to-top fixed z-50 w-11 h-11 rounded-full flex items-center justify-center glass-stat reveal-fade-in"
+          aria-label="Back to top"
+          data-cursor
+        >
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" className="w-4 h-4 text-[var(--neon)]" aria-hidden>
+            <path d="M8 13V3M3 8l5-5 5 5" />
+          </svg>
+        </button>
+      )}
     </>
   );
 }

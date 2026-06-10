@@ -1,39 +1,51 @@
-# Performance — Gallery & Interactive 3D Lab
+# Performance — Helios Portfolio (Optimized)
 
-## Frontend (Vite + React)
+## Architecture
 
-| Technique | Implementation |
-|-----------|----------------|
-| Code splitting | `Projects`, `Interactive3DLab`, `ModelScene` lazy-loaded via `React.lazy` + `Suspense` |
-| Three.js chunk | `vite.config.js` manualChunks: `three`, `r3f` (fiber + drei) |
-| Gallery images | WebP via Unsplash `fm=webp`; `<picture>` + `loading="lazy"` + `decoding="async"` |
-| HD sources | `imageHd` served only at `min-width: 1280px` |
-| 3D loading | Draco decoder path (`gstatic` CDN); `useGLTF` with Suspense fallback spinner |
-| Canvas DPR | `dpr={[1, 2]}` caps pixel ratio on retina |
-| GPU hint | `powerPreference: 'high-performance'` |
+| Layer | Strategy |
+|-------|----------|
+| Scroll reveals | `useIntersectionReveal` — Intersection Observer + CSS `opacity`/`transform` (no GSAP) |
+| Smooth scroll | Native `scroll-behavior: smooth` (Lenis removed) |
+| Background | Mobile: static CSS fog · Tablet+: lightweight WebGL galaxy (~80% fewer particles) |
+| 3D Lab | `ModelScene` mounts only when section in view; `frameloop` pauses off-screen |
+| Code splitting | Galaxy, Projects, Lab, About, Skills, Experience, Contact, CustomCursor lazy-loaded |
+| Images | WebP via Unsplash `fm=webp`; `loading="lazy"` + `decoding="async"` |
 
-## Target
+## Particle budgets (total)
 
-- **60 FPS** on mid-range GPU with single GLB (&lt;50k tris demo assets)
-- Gallery: no layout shift — skeleton pulse until `onLoad`
+| Tier | Particles | WebGL |
+|------|-----------|-------|
+| Mobile | 0 | Off — CSS ambient only |
+| Tablet | ~6k | Lite |
+| Laptop | ~13k | Lite |
+| Desktop | ~19k | Full |
+| Ultra | ~23k | Full |
 
-## Recommended production steps
+## Vite chunks
 
-1. **Replace gallery URLs** with local 4K AVIF/WebP in `/public/gallery/` (smaller than JPEG at same quality).
-2. **Compress GLB** with [gltf-transform](https://gltf-transform.dev/) or Blender export + Draco:
-   ```bash
-   npx @gltf-transform/cli optimize input.glb output.glb --compress draco
-   ```
-3. **Run `database/models.sql`** in Supabase SQL Editor.
-4. **Storage**: allow `models/` and `models/thumbnails/` in `portfolio-assets` bucket policies.
-5. **Deploy API**: `vercel.json` rewrites `/api/models` and `/api/models/upload`.
+- `three` — Three.js core
+- `r3f` — React Three Fiber + Drei
+- `motion` — Framer Motion (modals/nav only)
 
-## API
+## Removed for performance
 
-- Public `GET /api/models` returns `visibility = true` only.
-- Authenticated admin `GET` returns all rows (including hidden).
-- View counter increments on single-model fetch.
+- GSAP / ScrollTrigger (~45 KB gzip)
+- Lenis smooth scroll (perpetual RAF)
+- `@react-three/postprocessing` (unused)
+- Grain overlay (SVG turbulence filter)
+- Nebula, dust, multi-ring systems, scroll-parallax camera
+- Ambient scroll parallax + animated starfield
+- Filter/blur animations
 
-## Stack note
+## Lighthouse targets
 
-Delivery uses **Vite + Vercel serverless + Supabase** (not Next.js/Express). Prisma schema in `prisma/schema.prisma` mirrors the `models` table for reference or future migration.
+Performance 95+ · Accessibility 95+ · Best Practices 95+ · SEO 95+
+
+Run: Chrome DevTools → Lighthouse → Mobile + Desktop
+
+## Production checklist
+
+1. Local gallery WebP/AVIF in `/public/gallery/`
+2. Compress GLB with Draco (`npx @gltf-transform/cli optimize`)
+3. Set `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` on Vercel
+4. Run `database/models.sql` in Supabase

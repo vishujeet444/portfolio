@@ -1,5 +1,6 @@
 import { Suspense, useRef, useEffect, useMemo, useState, useCallback } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
+import usePageVisibility from '../../hooks/usePageVisibility';
 import {
   OrbitControls,
   Environment,
@@ -208,9 +209,12 @@ export default function ModelScene({
   annotations = [],
   onStats,
   className = '',
+  active = true,
 }) {
   const containerRef = useRef(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const pageVisible = usePageVisibility();
+  const shouldRender = active && pageVisible;
 
   const toggleFullscreen = useCallback(() => {
     const el = containerRef.current;
@@ -240,10 +244,11 @@ export default function ModelScene({
     <div ref={containerRef} className={`lab-viewer-canvas-wrap ${isFullscreen ? 'is-fullscreen' : ''} ${className}`}>
       <Suspense fallback={<ViewerFallback />}>
         <Canvas
+          frameloop={shouldRender ? 'always' : 'never'}
           shadows
-          dpr={[1, 2]}
+          dpr={[1, 1.5]}
           camera={{ fov: 42, near: 0.1, far: 100 }}
-          gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+          gl={{ antialias: false, alpha: true, powerPreference: 'default' }}
           className="lab-canvas"
         >
           <color attach="background" args={['#050508']} />

@@ -10,22 +10,22 @@
   --section-block: clamp(3rem, 8vw, 7.5rem);
   --gap-fluid: clamp(1rem, 2.5vw, 1.5rem);
   --gap-section-fluid: clamp(3rem, 6vw, 7.5rem);
-  --blur-glass: blur(32px);
-  --blur-dock: blur(40px);
+  --blur-glass: blur(20px);
+  --blur-dock: blur(24px);
 }
 
 /* ── Performance tiers ───────────────────────────── */
 [data-tier='mobile'],
 [data-tier='tablet'] {
-  --blur-glass: blur(16px);
-  --blur-dock: blur(20px);
-  --apple-blur: blur(16px);
+  --blur-glass: blur(12px);
+  --blur-dock: blur(16px);
+  --apple-blur: blur(12px);
 }
 
 [data-reduce-effects='true'] {
-  --blur-glass: blur(8px);
-  --blur-dock: blur(12px);
-  --apple-blur: blur(12px);
+  --blur-glass: blur(6px);
+  --blur-dock: blur(10px);
+  --apple-blur: blur(8px);
 }
 
 [data-reduce-effects='true'] .ambient-stack,
