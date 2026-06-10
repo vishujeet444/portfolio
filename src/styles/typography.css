@@ -1,0 +1,223 @@
+/**
+ * Editorial typography system
+ * Display: Playfair Display → Cormorant Garamond
+ * Body: Inter
+ * Micro: Space Mono
+ */
+
+@layer base {
+  :root {
+    --font-display: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Space Mono', ui-monospace, monospace;
+
+    --text-hero: clamp(3rem, 8vw, 9rem);
+    --text-section: clamp(2rem, 5vw, 5rem);
+    --text-project: clamp(1.25rem, 2.5vw, 1.875rem);
+    --text-card: clamp(1.125rem, 2vw, 1.5rem);
+    --text-body: clamp(0.9375rem, 1.1vw, 1.125rem);
+    --text-label: clamp(0.65rem, 0.8vw, 0.75rem);
+    --text-button: clamp(0.8125rem, 1vw, 0.875rem);
+    --text-stat: clamp(2.5rem, 6vw, 4.5rem);
+    --text-hero-sub: clamp(1rem, 2vw, 1.5rem);
+
+    --leading-hero: 0.95;
+    --leading-section: 1;
+    --leading-body: 1.8;
+
+    --tracking-hero: -0.04em;
+    --tracking-label: 0.2em;
+    --tracking-button: 0.15em;
+
+    --measure-body: 60ch;
+    --measure-hero: min(8ch, 92vw);
+
+    --gap-hero: clamp(1.25rem, 3vw, 2rem);
+    --gap-section: clamp(3rem, 8vw, 7.5rem);
+    --gap-paragraph: 1.75rem; /* 28px */
+    --pad-card: clamp(1.25rem, 3vw, 3rem);
+
+    --opacity-body: 0.75;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+    font-feature-settings: 'liga' 1, 'kern' 1;
+  }
+  .font-body {
+    font-family: var(--font-body);
+    font-optical-sizing: auto;
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-label);
+  }
+
+  /* Hero name */
+  .type-hero,
+  .hero-title-line {
+    font-family: var(--font-display);
+    font-size: var(--text-hero);
+    font-weight: 500;
+    line-height: var(--leading-hero);
+    letter-spacing: var(--tracking-hero);
+    max-width: var(--measure-hero);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .type-hero-sub {
+    font-family: var(--font-display);
+    font-size: var(--text-hero-sub);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+  }
+
+  /* Section titles — primary line neutral, accent colored */
+  .type-section {
+    font-family: var(--font-display);
+    font-size: var(--text-section);
+    font-weight: 400;
+    line-height: var(--leading-section);
+    color: rgba(255, 255, 255, 0.92);
+    letter-spacing: -0.02em;
+  }
+
+  .type-section-accent {
+    font-family: var(--font-display);
+    font-size: var(--text-section);
+    font-weight: 400;
+    font-style: italic;
+    line-height: var(--leading-section);
+    letter-spacing: -0.02em;
+  }
+
+  .type-project-title {
+    font-family: var(--font-display);
+    font-size: var(--text-project);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .type-card-title {
+    font-family: var(--font-display);
+    font-size: var(--text-card);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .type-body {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    font-weight: 400;
+    line-height: var(--leading-body);
+    max-width: var(--measure-body);
+    color: rgba(255, 255, 255, var(--opacity-body));
+  }
+
+  .type-body-sm {
+    font-family: var(--font-body);
+    font-size: clamp(0.875rem, 1.5vw, 1rem);
+    font-weight: 400;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.55);
+  }
+
+  .type-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    font-weight: 400;
+    line-height: 1.4;
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.38);
+  }
+
+  .type-button {
+    font-family: var(--font-mono);
+    font-size: var(--text-button);
+    font-weight: 400;
+    letter-spacing: var(--tracking-button);
+    text-transform: uppercase;
+  }
+
+  .type-stat {
+    font-family: var(--font-display);
+    font-size: var(--text-stat);
+    font-weight: 400;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+  }
+
+  .type-stat-inline {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .section-number {
+    font-family: var(--font-mono);
+    font-size: var(--text-label);
+    letter-spacing: var(--tracking-label);
+    text-transform: uppercase;
+    color: rgba(45, 160, 110, 0.5);
+  }
+
+  .hero-stack {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-hero);
+  }
+
+  /* Brand lockup — nav + hero */
+  .brand-logo {
+    display: flex;
+    align-items: center;
+  }
+  .brand-logo--icon {
+    justify-content: center;
+  }
+  .brand-logo__glyph-wrap {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand-logo__ring-glow {
+    position: absolute;
+    inset: -35%;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--emerald-glow) 0%, transparent 68%);
+    pointer-events: none;
+    opacity: 0.65;
+  }
+  .stack-paragraph {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-paragraph);
+  }
+
+  /* .section-pad → responsive.css */
+
+  .pad-card {
+    padding: var(--pad-card);
+  }
+
+  .btn-luxury,
+  .btn-cinematic {
+    font-family: var(--font-mono);
+    font-size: var(--text-button);
+    font-weight: 400;
+    letter-spacing: var(--tracking-button);
+    text-transform: uppercase;
+  }
+}

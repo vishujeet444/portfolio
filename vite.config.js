@@ -6,6 +6,15 @@ export default defineConfig({
   optimizeDeps: {
     include: ['three', '@react-three/fiber', '@react-three/drei', 'gsap', 'framer-motion'],
   },
+  server: {
+    host: 'localhost',
+    port: 5173,
+    open: true,
+    watch: {
+      usePolling: true,
+      interval: 1000,
+    },
+  },
   build: {
     target: 'esnext',
     rollupOptions: {
@@ -13,7 +22,8 @@ export default defineConfig({
         manualChunks: {
           three: ['three'],
           r3f: ['@react-three/fiber', '@react-three/drei'],
-          gsap: ['gsap'],
+          gsap: ['gsap', 'gsap/ScrollTrigger'],
+          motion: ['framer-motion'],
         },
       },
     },

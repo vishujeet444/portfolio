@@ -2,28 +2,45 @@
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
+    screens: {
+      sm: '320px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1440px',
+      '2xl': '1920px',
+    },
     extend: {
       fontFamily: {
-        display: ['Cormorant Garamond', 'serif'],
-        body: ['Inter', 'sans-serif'],
-        mono: ['Space Grotesk', 'sans-serif'],
+        display: ['Playfair Display', 'Cormorant Garamond', 'Georgia', 'serif'],
+        body: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['Space Mono', 'ui-monospace', 'monospace'],
+      },
+      fontSize: {
+        hero: 'clamp(5rem, 8vw, 9rem)',
+        section: 'clamp(3rem, 5vw, 5rem)',
+        project: '1.875rem',
+        card: '1.5rem',
+        body: '1.125rem',
+        label: '0.75rem',
+        button: '0.875rem',
+        stat: '4.5rem',
       },
       colors: {
         gold: {
-          DEFAULT: '#00FF88',
-          light: '#33FFAA',
-          dark: '#00CC6A',
+          DEFAULT: '#3dd68c',
+          light: '#6bc99a',
+          dark: '#2a9d65',
         },
         neon: {
-          DEFAULT: '#00FF88',
-          light: '#33FFAA',
-          dark: '#00CC6A',
-          cyan: '#00E5FF',
+          DEFAULT: '#3dd68c',
+          light: '#6bc99a',
+          dark: '#2a9d65',
+          cyan: '#6ec4d4',
         },
         lavender: {
-          DEFAULT: '#00E5FF',
-          light: '#33EEFF',
-          dark: '#00B8D4',
+          DEFAULT: '#6ec4d4',
+          light: '#8ed4e0',
+          dark: '#4a9aaa',
         },
         void: {
           DEFAULT: '#050508',

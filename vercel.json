@@ -32,7 +32,9 @@
     { "source": "/api/contact",        "destination": "/api/contact.js" },
     { "source": "/api/messages",       "destination": "/api/messages.js" },
     { "source": "/api/projects",       "destination": "/api/projects.js" },
-    { "source": "/api/experience",     "destination": "/api/experience.js" }
+    { "source": "/api/experience",     "destination": "/api/experience.js" },
+    { "source": "/api/models/upload",  "destination": "/api/models-upload.js" },
+    { "source": "/api/models",         "destination": "/api/models.js" }
   ],
 
   "functions": {

@@ -8,20 +8,26 @@ export default function Loader({ onComplete }) {
   const [phase, setPhase] = useState('loading'); // loading | revealing
 
   useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      onComplete();
+      return undefined;
+    }
+
     let count = 0;
     const interval = setInterval(() => {
-      count += Math.floor(Math.random() * 5) + 2;
+      count += Math.floor(Math.random() * 8) + 4;
       if (count >= 100) {
         count = 100;
         clearInterval(interval);
         if (counterRef.current) counterRef.current.textContent = '100%';
         if (progressRef.current) progressRef.current.style.width = '100%';
-        setTimeout(() => setPhase('revealing'), 600);
-        setTimeout(() => onComplete(), 1800);
+        setTimeout(() => setPhase('revealing'), 200);
+        setTimeout(() => onComplete(), 700);
       }
       if (counterRef.current) counterRef.current.textContent = count + '%';
       if (progressRef.current) progressRef.current.style.width = count + '%';
-    }, 60);
+    }, 35);
     return () => clearInterval(interval);
   }, [onComplete]);
 
@@ -120,19 +126,17 @@ export default function Loader({ onComplete }) {
             initial={{ opacity: 0, y: 10, letterSpacing: '0.2em' }}
             animate={{ opacity: 1, y: 0, letterSpacing: '0.6em' }}
             transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-2xl uppercase mb-2"
-            style={{ color: 'rgba(255,255,255,0.22)' }}
+            className="type-card-title text-white/25 mb-3"
           >
-            VISHWAJEET
+            Vishwajeet
           </motion.div>
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.3 }}
-            className="font-mono text-[0.6rem] tracking-[0.5em] uppercase mb-10"
-            style={{ color: 'rgba(0,255,136,0.4)' }}
+            className="type-label mb-10 text-[var(--neon)]/50"
           >
-            3D CINEMATIC ARTIST
+            3D Cinematic Artist
           </motion.div>
 
           {/* Progress bar */}
@@ -154,8 +158,7 @@ export default function Loader({ onComplete }) {
 
           <span
             ref={counterRef}
-            className="font-mono text-xs tracking-widest"
-            style={{ color: 'rgba(0,255,136,0.5)' }}
+            className="type-label text-[var(--neon)]/50"
           >
             0%
           </span>
@@ -164,10 +167,9 @@ export default function Loader({ onComplete }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="mt-6 font-mono text-[0.6rem] tracking-[0.4em] uppercase"
-            style={{ color: 'rgba(255,255,255,0.13)' }}
+            className="mt-8 type-label !text-[0.65rem]"
           >
-            Initializing HELIOS
+            Initializing experience
           </motion.div>
 
           {/* Data stream lines on sides */}

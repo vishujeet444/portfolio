@@ -90,6 +90,10 @@
                         <i class="fa-solid fa-images"></i>
                         <span>Projects</span>
                     </button>
+                    <button class="nav-item" data-tab="models">
+                        <i class="fa-solid fa-cube"></i>
+                        <span>3D Models</span>
+                    </button>
                     <button class="nav-item" data-tab="experience">
                         <i class="fa-solid fa-briefcase"></i>
                         <span>Experience</span>
@@ -136,6 +140,22 @@
 
                     <div id="projects-list" class="projects-grid">
                         <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading projects...</div>
+                    </div>
+                </section>
+
+                <!-- 3D MODELS TAB -->
+                <section id="tab-models" class="tab-content">
+                    <div class="content-header">
+                        <div>
+                            <h3>Interactive 3D Lab</h3>
+                            <p>Upload GLB/GLTF/FBX/OBJ models. Drag & drop or pick files — preview before publish.</p>
+                        </div>
+                        <button id="btn-add-model" class="btn btn-primary">
+                            <i class="fa-solid fa-upload"></i> Upload Model
+                        </button>
+                    </div>
+                    <div id="models-list" class="projects-grid">
+                        <div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading models...</div>
                     </div>
                 </section>
 
@@ -299,6 +319,77 @@
                     <button type="button" class="btn btn-secondary" id="btn-cancel-experience">Cancel</button>
                     <button type="submit" class="btn btn-primary" id="btn-submit-experience">
                         <span>Save Milestone</span>
+                        <i class="fa-solid fa-save"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 5. MODEL MODAL -->
+    <div id="model-modal" class="modal-overlay">
+        <div class="modal-card glass-panel" style="max-width: 640px;">
+            <div class="modal-header">
+                <h3 id="model-modal-title">Upload 3D Model</h3>
+                <button class="modal-close" id="btn-close-model-modal"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <form id="model-form">
+                <input type="hidden" id="model-id">
+                <div id="model-drop-zone" class="model-drop-zone">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <p>Drag & drop GLB, GLTF, FBX, OBJ, or USDZ</p>
+                    <input type="file" id="model-file" accept=".glb,.gltf,.fbx,.obj,.usdz" hidden>
+                    <button type="button" class="btn btn-secondary btn-sm" id="btn-pick-model">Choose file</button>
+                    <p id="model-file-name" class="type-hint"></p>
+                </div>
+                <div class="form-group" style="margin-top:1rem;">
+                    <label for="model-title">Title *</label>
+                    <input type="text" id="model-title" required placeholder="e.g. Chrome Torus Study">
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="model-category">Category</label>
+                        <select id="model-category">
+                            <option value="Abstract">Abstract</option>
+                            <option value="Archviz">Archviz</option>
+                            <option value="Product">Product</option>
+                            <option value="Character">Character</option>
+                            <option value="Environment">Environment</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="model-software">Software</label>
+                        <input type="text" id="model-software" placeholder="Blender, Maya…">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="model-description">Description</label>
+                    <textarea id="model-description" rows="2" placeholder="Material notes, art direction…"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-1">
+                        <label for="model-polycount">Polygon count</label>
+                        <input type="number" id="model-polycount" min="0" placeholder="0 = auto on view">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="model-tags">Tags (comma-separated)</label>
+                        <input type="text" id="model-tags" placeholder="PBR, chrome, demo">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="model-thumbnail-file">Thumbnail (optional — front / isometric / dramatic presets in viewer)</label>
+                    <input type="file" id="model-thumbnail-file" accept="image/*">
+                    <input type="text" id="model-thumbnail-url" placeholder="Or paste thumbnail URL">
+                </div>
+                <div class="form-row">
+                    <label class="checkbox-label"><input type="checkbox" id="model-featured"> Featured</label>
+                    <label class="checkbox-label"><input type="checkbox" id="model-visibility" checked> Visible on site</label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-model">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-model">
+                        <span>Publish</span>
                         <i class="fa-solid fa-save"></i>
                     </button>
                 </div>

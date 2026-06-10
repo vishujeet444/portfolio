@@ -94,6 +94,7 @@ document.querySelectorAll('.nav-item').forEach(btn => {
         // Load tab data on switch
         if (btn.dataset.tab === 'messages') loadMessages();
         if (btn.dataset.tab === 'projects') loadProjects();
+        if (btn.dataset.tab === 'models') loadModels();
         if (btn.dataset.tab === 'experience') loadExperience();
     });
 });
@@ -566,12 +567,259 @@ async function deleteExperience(id) {
 }
 
 // ════════════════════════════════════════════════════════════
+// 3D MODELS (Interactive Lab)
+// ════════════════════════════════════════════════════════════
+let pendingModelFile = null;
+
+async function loadModels() {
+    const list = document.getElementById('models-list');
+    if (!list) return;
+    list.innerHTML = `<div class="loading-state"><i class="fa-solid fa-spinner fa-spin"></i> Loading models...</div>`;
+
+    try {
+        const res = await fetch('/api/models', { headers: getAuthHeaders() });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed to load models');
+
+        if (!data.length) {
+            list.innerHTML = `<div class="empty-state"><i class="fa-solid fa-cube"></i><p>No 3D models yet. Upload your first asset.</p></div>`;
+            return;
+        }
+
+        list.innerHTML = data.map(m => `
+            <div class="project-card glass-panel" id="model-${m.id}">
+                <div class="project-thumb">
+                    <img src="${escHtml(m.thumbnail || 'https://via.placeholder.com/400x220?text=3D+Model')}" alt="${escHtml(m.title)}" loading="lazy"
+                        onerror="this.src='https://via.placeholder.com/400x220?text=3D+Model'">
+                    <span class="project-badge">${escHtml(m.category)}</span>
+                    ${m.featured ? '<span class="project-badge" style="right:auto;left:8px;background:var(--neon)">Featured</span>' : ''}
+                </div>
+                <div class="project-info">
+                    <h4>${escHtml(m.title)}</h4>
+                    <p>${escHtml((m.description || '').substring(0, 80))}${(m.description || '').length > 80 ? '…' : ''}</p>
+                    <p class="type-hint"><i class="fa-solid fa-eye"></i> ${m.views || 0} views · ${(m.file_format || 'glb').toUpperCase()}</p>
+                </div>
+                <div class="project-actions">
+                    <button class="btn btn-secondary btn-sm" onclick="toggleModelFeatured('${m.id}', ${!m.featured})">
+                        <i class="fa-solid fa-star"></i> ${m.featured ? 'Unfeature' : 'Feature'}
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="openModelModal(${JSON.stringify(m).replace(/"/g, '&quot;')})">
+                        <i class="fa-solid fa-pen"></i> Edit
+                    </button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteModel('${m.id}')">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    } catch (err) {
+        list.innerHTML = `<div class="error-state"><p>${err.message}</p></div>`;
+        toast(err.message, 'error');
+    }
+}
+
+function openModelModal(model = null) {
+    const modal = document.getElementById('model-modal');
+    const form = document.getElementById('model-form');
+    form.reset();
+    pendingModelFile = null;
+    document.getElementById('model-id').value = '';
+    document.getElementById('model-file-name').textContent = '';
+    document.getElementById('model-visibility').checked = true;
+
+    if (model) {
+        document.getElementById('model-modal-title').textContent = 'Edit 3D Model';
+        document.getElementById('model-id').value = model.id;
+        document.getElementById('model-title').value = model.title;
+        document.getElementById('model-category').value = model.category || 'Abstract';
+        document.getElementById('model-software').value = model.software || '';
+        document.getElementById('model-description').value = model.description || '';
+        document.getElementById('model-polycount').value = model.polycount || 0;
+        document.getElementById('model-tags').value = (model.tags || []).join(', ');
+        document.getElementById('model-thumbnail-url').value = model.thumbnail || '';
+        document.getElementById('model-featured').checked = !!model.featured;
+        document.getElementById('model-visibility').checked = model.visibility !== false;
+    } else {
+        document.getElementById('model-modal-title').textContent = 'Upload 3D Model';
+    }
+    modal.classList.add('active');
+}
+
+function closeModelModal() {
+    document.getElementById('model-modal')?.classList.remove('active');
+    pendingModelFile = null;
+}
+
+function setModelFile(file) {
+    if (!file) return;
+    const ext = file.name.split('.').pop().toLowerCase();
+    const allowed = ['glb', 'gltf', 'fbx', 'obj', 'usdz'];
+    if (!allowed.includes(ext)) {
+        toast('Unsupported format. Use GLB, GLTF, FBX, OBJ, or USDZ.', 'error');
+        return;
+    }
+    pendingModelFile = file;
+    document.getElementById('model-file-name').textContent = `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+    if (!document.getElementById('model-title').value) {
+        document.getElementById('model-title').value = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+    }
+}
+
+document.getElementById('btn-add-model')?.addEventListener('click', () => openModelModal());
+document.getElementById('btn-cancel-model')?.addEventListener('click', closeModelModal);
+document.getElementById('btn-close-model-modal')?.addEventListener('click', closeModelModal);
+document.getElementById('model-modal')?.addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) closeModelModal();
+});
+document.getElementById('btn-pick-model')?.addEventListener('click', () => document.getElementById('model-file')?.click());
+document.getElementById('model-file')?.addEventListener('change', (e) => setModelFile(e.target.files[0]));
+
+const dropZone = document.getElementById('model-drop-zone');
+if (dropZone) {
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        setModelFile(file);
+    });
+}
+
+document.getElementById('model-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('model-id').value;
+    const btn = document.getElementById('btn-submit-model');
+    btn.disabled = true;
+    btn.innerHTML = '<span>Publishing…</span> <i class="fa-solid fa-spinner fa-spin"></i>';
+
+    try {
+        let modelUrl = null;
+        let thumbUrl = document.getElementById('model-thumbnail-url').value.trim();
+        const thumbFile = document.getElementById('model-thumbnail-file').files[0];
+
+        if (pendingModelFile) {
+            modelUrl = await uploadModelFile(pendingModelFile);
+        } else if (!id) {
+            throw new Error('Select a 3D file to upload');
+        }
+
+        if (thumbFile) thumbUrl = await uploadFile(thumbFile, 'models/thumbnails');
+
+        const tags = document.getElementById('model-tags').value
+            .split(',')
+            .map(t => t.trim())
+            .filter(Boolean);
+
+        const payload = {
+            title: document.getElementById('model-title').value.trim(),
+            description: document.getElementById('model-description').value.trim(),
+            software: document.getElementById('model-software').value.trim(),
+            category: document.getElementById('model-category').value,
+            polycount: parseInt(document.getElementById('model-polycount').value, 10) || 0,
+            tags,
+            thumbnail: thumbUrl || null,
+            featured: document.getElementById('model-featured').checked,
+            visibility: document.getElementById('model-visibility').checked,
+        };
+
+        if (modelUrl) {
+            payload.model_url = modelUrl;
+            payload.file_format = pendingModelFile.name.split('.').pop().toLowerCase();
+            payload.file_size = pendingModelFile.size;
+        }
+
+        let res;
+        if (id) {
+            payload.id = id;
+            res = await fetch('/api/models', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+                body: JSON.stringify(payload),
+            });
+        } else if (modelUrl) {
+            res = await fetch('/api/models/upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+                body: JSON.stringify(payload),
+            });
+        } else {
+            res = await fetch('/api/models', {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+                body: JSON.stringify(payload),
+            });
+        }
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Save failed');
+
+        toast(id ? 'Model updated.' : 'Model published.', 'success');
+        closeModelModal();
+        loadModels();
+    } catch (err) {
+        toast(err.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Publish</span> <i class="fa-solid fa-save"></i>';
+    }
+});
+
+async function toggleModelFeatured(id, featured) {
+    try {
+        const res = await fetch('/api/models', {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+            body: JSON.stringify({ action: 'feature', id, featured }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Failed');
+        toast(featured ? 'Model featured.' : 'Removed from featured.', 'success');
+        loadModels();
+    } catch (err) {
+        toast(err.message, 'error');
+    }
+}
+
+async function deleteModel(id) {
+    if (!confirm('Delete this 3D model?')) return;
+    try {
+        const res = await fetch('/api/models', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+            body: JSON.stringify({ id }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Delete failed');
+        document.getElementById(`model-${id}`)?.remove();
+        toast('Model deleted.', 'success');
+    } catch (err) {
+        toast(err.message, 'error');
+    }
+}
+
+async function uploadModelFile(file) {
+    const ext = file.name.split('.').pop();
+    const filename = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${ext}`;
+    const path = `models/${filename}`;
+
+    const { error } = await sb.storage
+        .from('portfolio-assets')
+        .upload(path, file, { cacheControl: '3600', upsert: false });
+
+    if (error) throw new Error(`Upload failed: ${error.message}`);
+
+    const { data: urlData } = sb.storage.from('portfolio-assets').getPublicUrl(path);
+    return urlData.publicUrl;
+}
+
+// ════════════════════════════════════════════════════════════
 // SUPABASE STORAGE UPLOAD
 // ════════════════════════════════════════════════════════════
-async function uploadFile(file) {
+async function uploadFile(file, folder = 'projects') {
     const ext      = file.name.split('.').pop();
     const filename = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}.${ext}`;
-    const path     = `projects/${filename}`;
+    const path     = `${folder}/${filename}`;
 
     const { data, error } = await sb.storage
         .from('portfolio-assets')

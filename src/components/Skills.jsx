@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import SectionHeader from './SectionHeader';
 
 const SKILLS = [
   { name: 'Maya', level: 95, category: '3D' },
@@ -16,8 +17,7 @@ const SKILLS = [
   { name: 'Premiere Pro', level: 72, category: 'Motion' },
 ];
 
-// HELIOS: alternating neon green / cyan / dim green
-const SKILL_COLORS = ['#00FF88', '#00E5FF', 'rgba(0,255,136,0.65)'];
+const SKILL_COLORS = ['var(--neon)', 'var(--cyan)', 'rgba(61,214,140,0.55)'];
 
 const EXPERTISE = [
   {
@@ -103,7 +103,7 @@ function SkillBar({ skill, index }) {
   const color = SKILL_COLORS[index % 3];
 
   return (
-    <div ref={ref} className="group">
+    <div ref={ref} className="group" data-reveal-child>
       <div className="flex justify-between items-center mb-2">
         <div className="flex items-center gap-2.5">
           <span
@@ -111,7 +111,7 @@ function SkillBar({ skill, index }) {
             style={{ background: color, boxShadow: `0 0 6px ${color}` }}
           />
           <span
-            className="font-mono text-xs transition-colors duration-300"
+            className="type-label !normal-case !tracking-normal"
             style={{ color: 'rgba(255,255,255,0.58)' }}
             onMouseEnter={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.9)'; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(255,255,255,0.58)'; }}
@@ -119,7 +119,7 @@ function SkillBar({ skill, index }) {
             {skill.name}
           </span>
           <span
-            className="font-mono text-[0.58rem] px-1.5 py-0.5 rounded"
+            className="type-label !text-[0.65rem] px-2 py-0.5 rounded normal-case"
             style={{
               color,
               border: `1px solid ${color}22`,
@@ -133,8 +133,8 @@ function SkillBar({ skill, index }) {
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ duration: 0.4, delay: index * 0.05 + 0.3 }}
-          className="font-mono text-xs"
-          style={{ color: 'rgba(255,255,255,0.22)' }}
+          className="type-label !normal-case"
+          style={{ color: 'rgba(255,255,255,0.35)' }}
         >
           {skill.level}%
         </motion.span>
@@ -157,35 +157,20 @@ function SkillBar({ skill, index }) {
 }
 
 function ExpertiseCard({ item, index, inView }) {
-  const color = item.color === 'neon' ? '#00FF88' : '#00E5FF';
+  const color = item.color === 'neon' ? 'var(--neon)' : 'var(--cyan)';
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: 0.3 + index * 0.08 }}
-      className="group relative p-5 rounded-2xl cursor-default overflow-hidden transition-all duration-500"
-      style={{
-        border: '1px solid rgba(0,255,136,0.07)',
-        background: 'rgba(0,255,136,0.018)',
-      }}
-      whileHover={{ y: -4 }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = `${color}20`;
-        e.currentTarget.style.background = `${color}04`;
-        e.currentTarget.style.boxShadow = `0 8px 40px rgba(0,0,0,0.4), 0 0 30px ${color}06`;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(0,255,136,0.07)';
-        e.currentTarget.style.background = 'rgba(0,255,136,0.018)';
-        e.currentTarget.style.boxShadow = 'none';
-      }}
+      className="capability-card group cursor-default"
+      data-reveal-child
       data-cursor
     >
-      {/* Hover radial glow */}
       <div
         className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{ background: `radial-gradient(ellipse at 30% 30%, ${color}08 0%, transparent 65%)` }}
+        style={{ background: `radial-gradient(ellipse at 30% 30%, rgba(45,160,110,0.08) 0%, transparent 65%)` }}
       />
 
       <div className="relative z-10">
@@ -202,15 +187,12 @@ function ExpertiseCard({ item, index, inView }) {
         />
 
         <h4
-          className="font-mono text-sm font-medium mb-1.5 transition-colors duration-300 group-hover:text-white"
-          style={{ color: 'rgba(255,255,255,0.72)' }}
+          className="type-card-title mb-2 transition-colors duration-300 group-hover:text-white"
+          style={{ color: 'rgba(255,255,255,0.85)' }}
         >
           {item.title}
         </h4>
-        <p
-          className="font-body text-xs leading-relaxed transition-colors duration-300 group-hover:text-white/45"
-          style={{ color: 'rgba(255,255,255,0.27)' }}
-        >
+        <p className="type-body-sm transition-colors duration-300 group-hover:text-white/55">
           {item.desc}
         </p>
       </div>
@@ -223,57 +205,25 @@ export default function Skills() {
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="skills" ref={ref} className="relative z-10 py-32 px-4">
+    <section id="skills" ref={ref} className="relative z-10 section-pad">
       <div className="section-container">
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={inView ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="flex items-center gap-4 mb-16"
-        >
-          <span className="section-number">03</span>
-          <span className="block w-8 h-px" style={{ background: 'rgba(0,255,136,0.3)' }} />
-          <span className="font-mono text-xs tracking-[0.3em] uppercase" style={{ color: 'rgba(255,255,255,0.28)' }}>
-            Skills
-          </span>
-        </motion.div>
+        <SectionHeader number="04" label="Skills" title="Technical" titleAccent="Proficiency" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-          {/* Left: Skill bars */}
-          <div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-display text-[clamp(2rem,4vw,3rem)] font-light mb-10"
-              style={{ color: 'rgba(255,255,255,0.9)' }}
-            >
-              Technical<br />
-              <span className="text-gradient-gold italic">Proficiency</span>
-            </motion.h2>
-
-            <div className="space-y-5">
+        <div className="skills-layout">
+          <div data-reveal>
+            <div className="space-y-5" data-reveal-stagger>
               {SKILLS.map((skill, i) => (
                 <SkillBar key={skill.name} skill={skill} index={i} />
               ))}
             </div>
           </div>
 
-          {/* Right: Expertise cards */}
-          <div>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="font-display text-[clamp(2rem,4vw,3rem)] font-light mb-10"
-              style={{ color: 'rgba(255,255,255,0.9)' }}
-            >
-              Areas of<br />
-              <span className="italic" style={{ color: '#00E5FF' }}>Expertise</span>
-            </motion.h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div data-reveal>
+            <h3 className="type-section mb-12">
+              Areas of <span className="type-section-accent text-[var(--cyan)]">Expertise</span>
+            </h3>
+            <div className="expertise-grid" data-reveal-stagger>
               {EXPERTISE.map((item, i) => (
                 <ExpertiseCard key={item.title} item={item} index={i} inView={inView} />
               ))}

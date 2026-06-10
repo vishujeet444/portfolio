@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { SITE, SOCIAL_LINKS, scrollToSection } from '../lib/constants';
+import MagneticButton from './MagneticButton';
 
 const ROLES = [
   '3D Cinematic Artist',
@@ -30,283 +32,165 @@ function TypingRoles() {
   }, [displayed, deleting, index]);
 
   return (
-    <span className="text-gradient-gold">
+    <span className="type-section-accent text-gradient-luxury">
       {displayed}
-      <span
-        className="animate-pulse"
-        style={{ color: '#00FF88', opacity: 0.8 }}
-      >|</span>
+      <span className="text-[var(--neon)] opacity-70">|</span>
     </span>
   );
 }
 
-
 export default function Hero() {
-  const scrollDown = () => {
-    document.querySelector('#works')?.scrollIntoView({ behavior: 'smooth' });
-  };
+  const scrollDown = () => scrollToSection('#works');
 
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 z-10 overflow-hidden"
+      className="hero-section relative flex flex-col items-center justify-center text-center z-10 overflow-hidden"
     >
-      {/* HELIOS ambient glow — neon green core */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(0,255,136,0.065) 0%, transparent 65%)',
+          background: 'radial-gradient(ellipse 70% 55% at 50% 48%, rgba(45,160,110,0.07) 0%, transparent 62%)',
         }}
       />
-      {/* Cyan accent top-left */}
       <div
-        className="absolute top-0 -left-1/4 w-2/3 h-2/3 pointer-events-none"
+        className="hero-glow-soft absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-[40%] pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse, rgba(0,229,255,0.04) 0%, transparent 70%)',
-          filter: 'blur(70px)',
-        }}
-      />
-      {/* Neon grid overlay (subtle) */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-30"
-        style={{
-          backgroundImage: 'linear-gradient(rgba(0,255,136,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,255,136,0.025) 1px, transparent 1px)',
-          backgroundSize: '80px 80px',
-          maskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%)',
+          background: 'radial-gradient(ellipse, rgba(110,196,212,0.04) 0%, transparent 70%)',
         }}
       />
 
-      {/* Horizontal decorative lines */}
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 1.5, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute top-1/2 left-0 right-0 h-px pointer-events-none opacity-[0.035]"
-        style={{ background: 'linear-gradient(90deg, transparent, #00FF88, transparent)' }}
-      />
-
-      {/* Corner decorations — neon green */}
-      {['top-20 left-8', 'top-20 right-8'].map((pos, i) => (
+      <div className="hero-stack relative z-10 w-full max-w-4xl">
         <motion.div
-          key={i}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1 + i * 0.2 }}
-          className={`absolute ${pos} hidden lg:block`}
-        >
-          <div
-            className="w-14 h-14"
-            style={{
-              borderTop: '1px solid rgba(0,255,136,0.2)',
-              borderLeft: i === 0 ? '1px solid rgba(0,255,136,0.2)' : 'none',
-              borderRight: i === 1 ? '1px solid rgba(0,255,136,0.2)' : 'none',
-            }}
-          />
-        </motion.div>
-      ))}
-
-      {/* HELIOS badge — eyebrow */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
-        className="flex items-center gap-4 mb-10"
-      >
-        <span
-          className="block w-16 h-px"
-          style={{ background: 'linear-gradient(to right, transparent, rgba(0,255,136,0.5))' }}
-        />
-        <span
-          className="font-mono text-[0.65rem] tracking-[0.45em] uppercase"
-          style={{ color: 'rgba(0,255,136,0.55)' }}
-        >
-          Portfolio 2024
-        </span>
-        <span
-          className="block w-16 h-px"
-          style={{ background: 'linear-gradient(to left, transparent, rgba(0,255,136,0.5))' }}
-        />
-      </motion.div>
-
-      {/* Main Title — HELIOS: VISHWAJEET KUMAR */}
-      <h1 className="font-display font-light leading-[0.9] mb-6">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[clamp(4rem,12vw,9rem)] tracking-[0.07em] uppercase text-gradient-gold text-glow-gold"
+          transition={{ duration: 0.8, delay: 0.35 }}
+          className="flex items-center justify-center gap-4"
         >
-          VISHWAJEET
+          <span className="block w-12 h-px bg-gradient-to-r from-transparent to-white/20" />
+          <span className="type-label text-[var(--neon)]/60">Portfolio {SITE.year}</span>
+          <span className="block w-12 h-px bg-gradient-to-l from-transparent to-white/20" />
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="text-[clamp(4rem,12vw,9rem)] tracking-[0.07em] uppercase text-gradient-gold text-glow-gold"
-        >
-          KUMAR
-        </motion.div>
-      </h1>
 
-      {/* Animated roles */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 2.2 }}
-        className="font-display text-[clamp(1rem,3vw,1.6rem)] font-light mb-4 h-10 flex items-center"
-      >
-        <TypingRoles />
-      </motion.div>
-
-      {/* Subtitle */}
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 2.6, ease: [0.22, 1, 0.36, 1] }}
-        className="font-body text-sm max-w-sm leading-relaxed mb-14 tracking-wide"
-        style={{ color: 'rgba(255,255,255,0.22)' }}
-      >
-        Photorealistic rendering · Architectural visualization · Cinematic storytelling
-      </motion.p>
-
-      {/* CTA Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 3.0, ease: [0.22, 1, 0.36, 1] }}
-        className="flex flex-wrap gap-5 justify-center mb-20"
-      >
-        <a
-          href="#works"
-          onClick={(e) => { e.preventDefault(); document.querySelector('#works')?.scrollIntoView({ behavior: 'smooth' }); }}
-          className="btn-cinematic btn-cinematic-primary magnetic"
-          data-cursor
-        >
-          Explore Works
-        </a>
-        <a
-          href="#contact"
-          onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
-          className="btn-cinematic magnetic"
-          data-cursor
-        >
-          Get In Touch
-        </a>
-      </motion.div>
-
-      {/* Floating stats */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 3.4 }}
-        className="flex gap-12 md:gap-20"
-      >
-        {[
-          { num: '5+', label: 'Years' },
-          { num: '100+', label: 'Projects' },
-          { num: '50+', label: 'Clients' },
-        ].map(({ num, label }) => (
-          <div key={label} className="text-center">
-            <div className="font-display text-2xl text-gradient-gold font-light">{num}</div>
-            <div
-              className="font-mono text-[0.6rem] tracking-[0.3em] uppercase"
-              style={{ color: 'rgba(255,255,255,0.22)' }}
+        <h1 className="font-display w-full">
+          {['Vishwajeet', 'Kumar'].map((line, i) => (
+            <motion.span
+              key={line}
+              initial={{ opacity: 0, y: 40, letterSpacing: '0.02em' }}
+              animate={{ opacity: 1, y: 0, letterSpacing: 'var(--tracking-hero)' }}
+              transition={{ duration: 1.1, delay: 0.5 + i * 0.14, ease: [0.16, 1, 0.3, 1] }}
+              className="hero-title-line block text-gradient-luxury"
             >
-              {label}
-            </div>
-          </div>
-        ))}
-      </motion.div>
+              {line}
+            </motion.span>
+          ))}
+        </h1>
 
-      {/* Scroll indicator — neon green */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 1.2 }}
+          className="type-hero-sub min-h-[2rem] flex items-center justify-center"
+        >
+          <TypingRoles />
+        </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 1.45 }}
+          className="type-body mx-auto text-center"
+        >
+          {SITE.tagline}
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 1.65 }}
+          className="hero-actions"
+        >
+          <MagneticButton
+            variant="primary"
+            href="#works"
+            onClick={(e) => { e.preventDefault(); scrollToSection('#works'); }}
+          >
+            Explore Works
+          </MagneticButton>
+          <MagneticButton
+            variant="glass"
+            href="#contact"
+            onClick={(e) => { e.preventDefault(); scrollToSection('#contact'); }}
+          >
+            Get In Touch
+          </MagneticButton>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 1.85 }}
+          className="hero-stats pt-4"
+        >
+          {[
+            { num: '5+', label: 'Years' },
+            { num: '100+', label: 'Projects' },
+            { num: '50+', label: 'Clients' },
+          ].map(({ num, label }) => (
+            <div key={label} className="text-center">
+              <div className="type-stat-inline text-gradient-luxury">{num}</div>
+              <div className="type-label mt-2">{label}</div>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+
       <motion.button
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 4 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 cursor-pointer group"
+        transition={{ duration: 1, delay: 2.2 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 cursor-pointer"
         onClick={scrollDown}
         aria-label="Scroll to works"
       >
-        <span
-          className="font-mono text-[0.55rem] tracking-[0.5em] uppercase transition-colors duration-300"
-          style={{ color: 'rgba(255,255,255,0.18)' }}
-        >
-          Scroll
-        </span>
-        <div
-          className="relative w-px h-14 overflow-hidden"
-          style={{ background: 'linear-gradient(to bottom, rgba(0,255,136,0.4), transparent)' }}
-        >
+        <span className="type-label">Scroll</span>
+        <div className="relative w-px h-12 overflow-hidden bg-gradient-to-b from-[var(--neon)]/40 to-transparent">
           <motion.div
-            className="absolute top-0 left-0 w-full"
-            style={{ background: '#00FF88' }}
+            className="absolute top-0 left-0 w-full bg-[var(--neon)]"
             animate={{ height: ['0%', '100%', '0%'], top: ['0%', '0%', '100%'] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
       </motion.button>
 
-      {/* Side coordinates */}
-      <div
-        className="absolute left-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-center gap-2"
-        style={{ opacity: 0.14 }}
-      >
+      <div className="hero-side-rail absolute left-8 top-1/2 -translate-y-1/2 flex-col items-center gap-2 opacity-[0.12]">
         <span
-          className="font-mono text-[0.55rem] tracking-widest text-white"
-          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', letterSpacing: '0.15em' }}
+          className="type-label"
+          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
         >
           25.2°N · 82.9°E
         </span>
-        <div
-          className="w-px h-16"
-          style={{ background: 'linear-gradient(to bottom, rgba(0,255,136,0.3), transparent)' }}
-        />
       </div>
 
-      {/* Right side — social quick links */}
       <motion.div
-        initial={{ opacity: 0, x: 20 }}
+        initial={{ opacity: 0, x: 16 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 1, delay: 3.8 }}
-        className="absolute right-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col items-center gap-4"
+        transition={{ duration: 1, delay: 2 }}
+        className="hero-side-rail absolute right-8 top-1/2 -translate-y-1/2 flex-col items-center gap-4"
       >
-        {[
-          { label: 'AS', href: 'https://www.artstation.com/vishwajeetkumar684', title: 'ArtStation' },
-          { label: 'LI', href: 'https://www.linkedin.com/in/vishwajeet-kumar-811949217', title: 'LinkedIn' },
-          { label: 'IG', href: 'https://www.instagram.com/vishu_u___13', title: 'Instagram' },
-        ].map((s) => (
+        {SOCIAL_LINKS.map((s) => (
           <a
             key={s.label}
             href={s.href}
             target="_blank"
             rel="noopener noreferrer"
-            title={s.title}
-            className="w-8 h-8 rounded-full flex items-center justify-center font-mono text-[0.6rem] transition-all duration-300"
-            style={{
-              color: 'rgba(255,255,255,0.22)',
-              border: '1px solid rgba(255,255,255,0.07)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#00FF88';
-              e.currentTarget.style.borderColor = 'rgba(0,255,136,0.4)';
-              e.currentTarget.style.boxShadow = '0 0 16px rgba(0,255,136,0.2)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'rgba(255,255,255,0.22)';
-              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)';
-              e.currentTarget.style.boxShadow = 'none';
-            }}
+            title={s.label}
+            className="w-9 h-9 rounded-full flex items-center justify-center type-label social-pill"
             data-cursor
           >
-            {s.label}
+            {s.short}
           </a>
         ))}
-        <div
-          className="w-px h-16"
-          style={{ background: 'linear-gradient(to bottom, transparent, rgba(0,255,136,0.15), transparent)' }}
-        />
       </motion.div>
     </section>
   );

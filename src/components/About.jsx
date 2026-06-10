@@ -1,5 +1,8 @@
-import { useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { CONTACT, SITE } from '../lib/constants';
+import SectionHeader from './SectionHeader';
+import StatCounter from './StatCounter';
 
 const TOOLS = [
   'Maya', 'Blender', 'ZBrush', '3ds Max', 'V-Ray', 'Arnold',
@@ -32,7 +35,7 @@ function Marquee({ items }) {
         {doubled.map((item, i) => (
           <span
             key={i}
-            className="flex-shrink-0 px-3 py-1 font-mono text-[0.65rem] cursor-default"
+            className="flex-shrink-0 px-3 py-1 type-label cursor-default"
             style={{
               color: 'rgba(0,255,136,0.55)',
               border: '1px solid rgba(0,255,136,0.1)',
@@ -70,108 +73,53 @@ function BentoTile({ children, className = '', style = {}, delay = 0, hover = tr
 
 export default function About() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="about" ref={ref} className="relative z-10 py-32 px-4">
+    <section id="about" ref={ref} className="relative z-10 section-pad">
       <div className="section-container">
 
-        {/* Section label */}
-        <motion.div {...springIn(0)} className="flex items-center gap-4 mb-12">
-          <span className="section-number">02</span>
-          <span className="block w-8 h-px" style={{ background: 'rgba(0,255,136,0.3)' }} />
-          <span className="font-mono text-xs tracking-[0.3em] uppercase" style={{ color: 'rgba(255,255,255,0.28)' }}>
-            About Me
-          </span>
-        </motion.div>
+        <SectionHeader
+          number="03"
+          label="About Me"
+          title="Crafting worlds"
+          titleAccent="through light"
+        />
 
-        {/* Section heading */}
-        <motion.h2 {...springIn(0.08)} className="font-display text-[clamp(2.8rem,6vw,5rem)] font-light leading-tight mb-14" style={{ color: 'rgba(255,255,255,0.92)' }}>
-          Crafting worlds<br />
-          <span className="text-gradient-gold italic">through light</span>
-        </motion.h2>
+        <motion.p
+          data-reveal
+          {...springIn(0.06)}
+          className="type-body mx-auto md:mx-0 mb-14 -mt-4"
+        >
+          A narrative of light, space, and cinematic craft — from concept to final frame.
+        </motion.p>
 
         {/* ── APPLE BENTO GRID ────────────────────────── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-auto gap-4">
+        <div className="about-bento">
 
-          {/* [A] Profile photo — tall left card, spans 2 rows */}
-          <BentoTile
-            className="col-span-2 row-span-2 md:col-span-1 md:row-span-2"
-            delay={0.05}
-            style={{ ...glassCard, minHeight: 360 }}
-          >
-            <div className="relative h-full min-h-[360px]">
-              <img
-                src="./profile.jpeg"
-                alt="Vishwajeet Kumar"
-                className="w-full h-full object-cover object-top"
-                style={{ borderRadius: 24 }}
-                onError={(e) => { e.target.style.display = 'none'; }}
-              />
-              <div
-                className="absolute inset-0"
-                style={{
-                  background: 'linear-gradient(to top, rgba(5,5,8,0.8) 0%, transparent 45%)',
-                  borderRadius: 24,
-                }}
-              />
-              {/* Name tag */}
-              <div className="absolute bottom-4 left-4 right-4">
-                <div className="font-display text-xl font-light" style={{ color: 'rgba(255,255,255,0.9)' }}>
-                  Vishwajeet Kumar
-                </div>
-                <div className="font-mono text-[0.6rem] tracking-widest uppercase mt-1" style={{ color: 'rgba(0,255,136,0.6)' }}>
-                  3D Cinematic Artist
-                </div>
-              </div>
-            </div>
-          </BentoTile>
-
-          {/* [B] Bio tile — spans 2 cols */}
-          <BentoTile className="col-span-2 md:col-span-2" delay={0.1} style={{ ...glassCard, padding: '1.75rem' }}>
+          <BentoTile className="about-bento__bio" delay={0.05} style={{ ...glassCard, padding: 'clamp(1.25rem, 3vw, 1.75rem)' }}>
             <div className="h-full flex flex-col justify-between">
               <div>
+                <h3 className="type-card-title text-white/90 mb-1">Vishwajeet Kumar</h3>
+                <p className="type-label text-[var(--neon)]/60 mb-5">3D Cinematic Artist · Mumbai</p>
                 <div className="flex items-center gap-2 mb-4">
                   <span className="w-2 h-2 rounded-full" style={{ background: '#00FF88', boxShadow: '0 0 8px rgba(0,255,136,0.7)' }} />
-                  <span className="font-mono text-[0.6rem] tracking-widest uppercase" style={{ color: 'rgba(0,255,136,0.6)' }}>
+                  <span className="type-label text-[var(--neon)]/60">
                     Open to work
                   </span>
                 </div>
-                <p className="font-body text-sm leading-[1.9]" style={{ color: 'rgba(255,255,255,0.5)' }}>
+                <p className="type-body !max-w-none">
                   Pursuing a Bachelor's in Animation at the Asian Academy of Media and Arts. I transform concepts into breathtaking cinematic realities through rendering, lighting, and visual storytelling.
                 </p>
               </div>
             </div>
           </BentoTile>
 
-          {/* [C] Years stat */}
-          <BentoTile delay={0.12} style={{ ...glassCard, padding: '1.5rem' }}>
-            <div className="h-full flex flex-col justify-between" style={{ minHeight: 120 }}>
-              <div className="font-mono text-[0.6rem] tracking-widest uppercase" style={{ color: 'rgba(0,255,136,0.4)' }}>
-                Experience
-              </div>
-              <div>
-                <div className="font-display text-5xl font-light text-gradient-gold">5+</div>
-                <div className="font-mono text-[0.6rem] tracking-widest uppercase mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                  Years in 3D
-                </div>
-              </div>
-            </div>
+          <BentoTile delay={0.12} className="!p-0 !bg-transparent !border-0" style={{}} hover={false}>
+            <StatCounter value="5+" label="Years in 3D" />
           </BentoTile>
 
-          {/* [D] Projects stat */}
-          <BentoTile delay={0.14} style={{ ...glassCard, padding: '1.5rem' }}>
-            <div className="h-full flex flex-col justify-between" style={{ minHeight: 120 }}>
-              <div className="font-mono text-[0.6rem] tracking-widest uppercase" style={{ color: 'rgba(0,229,255,0.4)' }}>
-                Projects
-              </div>
-              <div>
-                <div className="font-display text-5xl font-light" style={{ color: '#00E5FF' }}>100+</div>
-                <div className="font-mono text-[0.6rem] tracking-widest uppercase mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                  Completed
-                </div>
-              </div>
-            </div>
+          <BentoTile delay={0.14} className="!p-0 !bg-transparent !border-0" style={{}} hover={false}>
+            <StatCounter value="100+" label="Projects completed" accent="var(--cyan)" />
           </BentoTile>
 
           {/* [E] Location tile */}
@@ -182,37 +130,26 @@ export default function About() {
                 <circle cx="12" cy="10" r="3" />
               </svg>
               <div>
-                <div className="font-body text-sm font-medium" style={{ color: 'rgba(255,255,255,0.75)' }}>Mumbai</div>
-                <div className="font-mono text-[0.6rem] tracking-widest uppercase mt-0.5" style={{ color: 'rgba(255,255,255,0.28)' }}>India</div>
+                <div className="type-body-sm !text-white/75">Mumbai</div>
+                <div className="type-label mt-1">India</div>
               </div>
             </div>
           </BentoTile>
 
-          {/* [F] Clients stat */}
-          <BentoTile delay={0.18} style={{ ...glassCard, padding: '1.5rem' }}>
-            <div className="h-full flex flex-col justify-between" style={{ minHeight: 120 }}>
-              <div className="font-mono text-[0.6rem] tracking-widest uppercase" style={{ color: 'rgba(0,255,136,0.4)' }}>
-                Clients
-              </div>
-              <div>
-                <div className="font-display text-5xl font-light text-gradient-gold">50+</div>
-                <div className="font-mono text-[0.6rem] tracking-widest uppercase mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                  Worldwide
-                </div>
-              </div>
-            </div>
+          <BentoTile delay={0.18} className="!p-0 !bg-transparent !border-0" hover={false}>
+            <StatCounter value="50+" label="Clients worldwide" />
           </BentoTile>
 
           {/* [G] Specialty tile */}
           <BentoTile delay={0.2} style={{ ...glassCard, padding: '1.5rem' }}>
             <div style={{ minHeight: 120 }}>
-              <div className="font-mono text-[0.6rem] tracking-widest uppercase mb-3" style={{ color: 'rgba(0,229,255,0.4)' }}>
+              <div className="type-label mb-3 text-[var(--cyan)]/50">
                 Specialty
               </div>
               {['Archviz', 'VFX', 'Unreal 5'].map((tag) => (
-                <div key={tag} className="flex items-center gap-2 mb-1.5">
-                  <span className="w-1 h-1 rounded-full" style={{ background: '#00E5FF' }} />
-                  <span className="font-mono text-[0.65rem]" style={{ color: 'rgba(255,255,255,0.55)' }}>{tag}</span>
+                <div key={tag} className="flex items-center gap-2 mb-2">
+                  <span className="w-1 h-1 rounded-full bg-[var(--cyan)]" />
+                  <span className="type-body-sm">{tag}</span>
                 </div>
               ))}
             </div>
@@ -225,23 +162,23 @@ export default function About() {
                 <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
                 <path d="M6 12v5c3 3 9 3 12 0v-5" />
               </svg>
-              <div className="font-body text-[0.75rem] leading-relaxed" style={{ color: 'rgba(255,255,255,0.55)' }}>
+              <div className="type-body-sm">
                 Asian Academy of Media & Arts
               </div>
-              <div className="font-mono text-[0.58rem] tracking-widest uppercase mt-1" style={{ color: 'rgba(0,255,136,0.35)' }}>
-                BFA Animation · 2024
+              <div className="type-label mt-2">
+                BFA Animation · {SITE.year}
               </div>
             </div>
           </BentoTile>
 
           {/* [I] Tools marquee — full width */}
           <BentoTile
-            className="col-span-2 md:col-span-4"
+            className="about-bento__marquee"
             delay={0.24}
             hover={false}
             style={{ ...glassCard, padding: '1.5rem 1.75rem' }}
           >
-            <div className="font-mono text-[0.6rem] tracking-widest uppercase mb-4" style={{ color: 'rgba(0,255,136,0.35)' }}>
+            <div className="type-label mb-5">
               Tools & Software
             </div>
             <Marquee items={TOOLS} />
@@ -249,7 +186,7 @@ export default function About() {
 
           {/* [J] CTA tile — spans 2 cols */}
           <BentoTile
-            className="col-span-2 md:col-span-2"
+            className="about-bento__cta"
             delay={0.26}
             style={{ ...glassCard, padding: '1.75rem' }}
           >
@@ -277,34 +214,23 @@ export default function About() {
             </div>
           </BentoTile>
 
-          {/* [K] Awards stat */}
-          <BentoTile delay={0.28} style={{ ...glassCard, padding: '1.5rem' }}>
-            <div className="h-full flex flex-col justify-between" style={{ minHeight: 100 }}>
-              <div className="font-mono text-[0.6rem] tracking-widest uppercase" style={{ color: 'rgba(0,229,255,0.4)' }}>
-                Awards
-              </div>
-              <div>
-                <div className="font-display text-5xl font-light" style={{ color: '#00E5FF' }}>15+</div>
-                <div className="font-mono text-[0.6rem] tracking-widest uppercase mt-1" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                  & Features
-                </div>
-              </div>
-            </div>
+          <BentoTile delay={0.28} className="!p-0 !bg-transparent !border-0" hover={false}>
+            <StatCounter value="15+" label="Awards & features" accent="var(--cyan)" />
           </BentoTile>
 
           {/* [L] Quick facts */}
           <BentoTile delay={0.3} style={{ ...glassCard, padding: '1.5rem' }}>
             <div style={{ minHeight: 100 }}>
-              <div className="font-mono text-[0.6rem] tracking-widest uppercase mb-3" style={{ color: 'rgba(0,255,136,0.35)' }}>
+              <div className="type-label mb-4">
                 Quick Facts
               </div>
               {[
-                { k: 'Email', v: 'vishwajeetkumar@gmail' },
-                { k: 'Phone', v: '+91-9608975704' },
+                { k: 'Email', v: CONTACT.email },
+                { k: 'Phone', v: CONTACT.phone },
               ].map(({ k, v }) => (
-                <div key={k} className="mb-1.5">
-                  <div className="font-mono text-[0.55rem] uppercase" style={{ color: 'rgba(0,255,136,0.3)' }}>{k}</div>
-                  <div className="font-mono text-[0.62rem]" style={{ color: 'rgba(255,255,255,0.5)' }}>{v}</div>
+                <div key={k} className="mb-3">
+                  <div className="type-label !text-[0.65rem] mb-1">{k}</div>
+                  <div className="type-body-sm">{v}</div>
                 </div>
               ))}
             </div>

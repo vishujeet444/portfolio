@@ -1,0 +1,34 @@
+// Reference Prisma schema — maps to Supabase PostgreSQL `models` table
+// Use: npx prisma db pull && npx prisma generate (when connecting DATABASE_URL)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Model {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String   @db.VarChar(200)
+  slug        String   @unique @db.VarChar(220)
+  thumbnail   String?
+  modelUrl    String   @map("model_url")
+  description String   @default("")
+  software    String   @default("")
+  polycount   Int      @default(0)
+  category    String   @default("Abstract")
+  tags        String[] @default([])
+  featured    Boolean  @default(false)
+  visibility  Boolean  @default(true)
+  fileFormat  String   @default("glb") @map("file_format")
+  fileSize    BigInt   @default(0) @map("file_size")
+  materials   Json     @default("[]")
+  views       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("models")
+}
